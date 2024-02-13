@@ -3,8 +3,22 @@ version: '3.7'
 services:
   scraper:
     build: ./scraper
-    container_name: 'scraper'
+    container_name: scraper
     entrypoint: /bin/sh
     stdin_open: true
     tty: true
-    
+    volumes:
+      - ./scraper:/var/task
+
+  db:
+   command: "-jar DynamoDBLocal.jar -sharedDb -dbPath ./data"
+   image: "amazon/dynamodb-local:latest"
+   container_name: db
+   ports:
+     - "8000:8000"
+   volumes:
+     - "dynamo:/home/dynamodblocal/data"
+   working_dir: /home/dynamodblocal
+
+volumes:
+  dynamo:
