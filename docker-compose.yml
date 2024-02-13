@@ -1,4 +1,4 @@
-version: '3.7'
+version: "3.7"
 
 services:
   scraper:
@@ -9,16 +9,18 @@ services:
     tty: true
     volumes:
       - ./scraper:/var/task
+    environment:
+      DYNAMO_ENDPOINT: "http://db:8000"
+      AWS_REGION: "us-east-1"
+      AWS_ACCESS_KEY_ID: test
+      AWS_SECRET_ACCESS_KEY: test
 
   db:
-   command: "-jar DynamoDBLocal.jar -sharedDb -dbPath ./data"
-   image: "amazon/dynamodb-local:latest"
-   container_name: db
-   ports:
-     - "8000:8000"
-   volumes:
-     - "dynamo:/home/dynamodblocal/data"
-   working_dir: /home/dynamodblocal
-
-volumes:
-  dynamo:
+    command: "-jar DynamoDBLocal.jar -sharedDb -dbPath ./data"
+    image: "amazon/dynamodb-local:latest"
+    container_name: db
+    ports:
+      - "8000:8000"
+    volumes:
+      - "./__docker__/dynamodb:/home/dynamodblocal/data"
+    working_dir: /home/dynamodblocal

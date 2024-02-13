@@ -1,10 +1,8 @@
-import boto3
+from src.db import DynamoDB
 
-dynamodb = boto3.resource(
-    "dynamodb", endpoint_url="http://db:8000", region_name="us-east-1"
-)
-print(dynamodb)
+dynamodb = DynamoDB()
 
 
 def handler(event, context):
-    print("Hello world")
+    print(list(dynamodb.client.tables.all()))
+
