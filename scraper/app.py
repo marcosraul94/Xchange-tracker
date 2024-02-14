@@ -5,4 +5,3 @@ dynamodb = DynamoDB()
 
 def handler(event, context):
     print(list(dynamodb.client.tables.all()))
-
