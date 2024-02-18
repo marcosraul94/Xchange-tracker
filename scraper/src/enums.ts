@@ -3,3 +3,7 @@ export enum ENVIRONMENT {
   DEV = "dev",
   PROD = "prod",
 }
+
+export const enum BANK {
+  POPULAR = "Banco Popular",
+}
