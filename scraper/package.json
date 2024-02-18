@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "npx tsc",
+    "build": "npx tsc && npx resolve-tspaths",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -13,8 +13,9 @@
     "puppeteer": "^21.9.0"
   },
   "devDependencies": {
+    "resolve-tspaths": "^0.8.18",
     "ts-node": "^10.9.2",
-    "typescript": "^5.3.3",
-    "tsconfig-paths": "^4.2.0"
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.3.3"
   }
 }
