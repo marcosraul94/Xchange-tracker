@@ -2,7 +2,6 @@ import { ElementHandle, Page } from "puppeteer";
 import { BANK } from "src/enums";
 import { ScrapeResult } from "src/interfaces";
 import { BrowserScraper } from "src/scrapers/base";
-import { DollarRate, EuroRate } from "src/entities/bankRate";
 import { validateAmount } from "src/utils";
 
 export class PopularScraper extends BrowserScraper {
@@ -20,49 +19,38 @@ export class PopularScraper extends BrowserScraper {
     const dollarSellRate = await this.getDollarSellRate(page);
 
     return {
-      euro: new EuroRate(this.bank, euroBuyRate, euroSellRate),
-      dollar: new DollarRate(this.bank, dollarBuyRate, dollarSellRate),
+      euro: { bank: this.bank, buy: euroBuyRate, sell: euroSellRate },
+      dollar: { bank: this.bank, buy: dollarBuyRate, sell: dollarSellRate },
     };
+  }
+
+  async parseValue(page: Page, selector: string): Promise<number> {
+    const element = (await page.waitForSelector(
+      selector
+    )) as ElementHandle<HTMLInputElement> | null;
+    if (!element) throw Error("Not found selector");
+
+    const amount = await element.evaluate((e) => e.value);
+    return parseFloat(amount);
   }
 
   @validateAmount
   async getEuroBuyRate(page: Page): Promise<number> {
-    const element = (await page.waitForSelector(
-      "#compra_peso_euro_desktop"
-    )) as ElementHandle<HTMLInputElement> | null;
-    if (!element) throw Error("Not found selector");
-
-    const amount = await element.evaluate((e) => e.value);
-    return parseFloat(amount);
+    return this.parseValue(page, "#compra_peso_euro_desktop");
   }
 
+  @validateAmount
   async getEuroSellRate(page: Page): Promise<number> {
-    const element = (await page.waitForSelector(
-      "#venta_peso_euro_desktop"
-    )) as ElementHandle<HTMLInputElement> | null;
-    if (!element) throw Error("Not found selector");
-
-    const amount = await element.evaluate((e) => e.value);
-    return parseFloat(amount);
+    return this.parseValue(page, "#venta_peso_euro_desktop");
   }
 
+  @validateAmount
   async getDollarBuyRate(page: Page): Promise<number> {
-    const element = (await page.waitForSelector(
-      "#compra_peso_dolar_desktop"
-    )) as ElementHandle<HTMLInputElement> | null;
-    if (!element) throw Error("Not found selector");
-
-    const amount = await element.evaluate((e) => e.value);
-    return parseFloat(amount);
+    return this.parseValue(page, "#compra_peso_dolar_desktop");
   }
 
+  @validateAmount
   async getDollarSellRate(page: Page): Promise<number> {
-    const element = (await page.waitForSelector(
-      "#venta_peso_dolar_desktop"
-    )) as ElementHandle<HTMLInputElement> | null;
-    if (!element) throw Error("Not found selector");
-
-    const amount = await element.evaluate((e) => e.value);
-    return parseFloat(amount);
+    return this.parseValue(page, "#venta_peso_dolar_desktop");
   }
 }
