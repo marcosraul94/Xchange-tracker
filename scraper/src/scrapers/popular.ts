@@ -37,14 +37,32 @@ export class PopularScraper extends BrowserScraper {
   }
 
   async getEuroSellRate(page: Page): Promise<number> {
-    return 44;
+    const element = (await page.waitForSelector(
+      "#venta_peso_euro_desktop"
+    )) as ElementHandle<HTMLInputElement> | null;
+    if (!element) throw Error("Not found selector");
+
+    const amount = await element.evaluate((e) => e.value);
+    return parseFloat(amount);
   }
 
   async getDollarBuyRate(page: Page): Promise<number> {
-    return 44;
+    const element = (await page.waitForSelector(
+      "#compra_peso_dolar_desktop"
+    )) as ElementHandle<HTMLInputElement> | null;
+    if (!element) throw Error("Not found selector");
+
+    const amount = await element.evaluate((e) => e.value);
+    return parseFloat(amount);
   }
 
   async getDollarSellRate(page: Page): Promise<number> {
-    return 44;
+    const element = (await page.waitForSelector(
+      "#venta_peso_dolar_desktop"
+    )) as ElementHandle<HTMLInputElement> | null;
+    if (!element) throw Error("Not found selector");
+
+    const amount = await element.evaluate((e) => e.value);
+    return parseFloat(amount);
   }
 }
