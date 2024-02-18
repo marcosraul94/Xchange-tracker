@@ -2,6 +2,7 @@ version: "3.7"
 
 services:
   scraper:
+    platform: linux/amd64
     build: ./scraper
     container_name: scraper
     entrypoint: /bin/sh

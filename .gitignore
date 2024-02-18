@@ -1,4 +1,6 @@
 __docker__/
+node_modules/
+chrome/
 
 
 # Byte-compiled / optimized / DLL files
