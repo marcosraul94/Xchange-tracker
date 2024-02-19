@@ -4,6 +4,8 @@ export function validateAmount(
   descriptor: PropertyDescriptor
 ) {
   const originalMethod = descriptor.value;
+  const methodName = key;
+  const className = target.constructor.name;
 
   descriptor.value = async function (...args: any[]) {
     try {
@@ -14,7 +16,7 @@ export function validateAmount(
 
       return amount;
     } catch (err) {
-      console.error(`Outdated selector for ${key}`);
+      console.error(`Outdated selector for ${methodName} from ${className}`);
       throw err;
     }
   };
