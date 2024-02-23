@@ -7,7 +7,7 @@ export const handler = async () => {
 
   const scrapingSession = new ScrapingSession({
     timeout: 10000,
-    concurrency: 1,
+    concurrency: 2,
     browserScraperClasses: [PopularScraper, BanreservasScraper],
     simpleScraperClasses: [],
   });

@@ -1,4 +1,5 @@
 import puppeteer, { Browser } from "puppeteer";
+import pLimit from "p-limit";
 import { ScraperBase } from "src/scrapers/base";
 import { AppConfig } from "src/interfaces";
 import { BrowserScrapers, SimpleScrapers } from "src/types";
@@ -25,12 +26,9 @@ export class ScrapingSession {
   async run() {
     try {
       const scrapers = await this.buildScrapers();
-
-      const results = [];
-      for (const scraper of scrapers) {
-        const result = await scraper.run();
-        results.push(result);
-      }
+      const limit = pLimit(this.concurrency);
+      const operations = scrapers.map((scraper) => limit(() => scraper.run()));
+      const results = await Promise.all(operations);
 
       console.log(results);
     } finally {
