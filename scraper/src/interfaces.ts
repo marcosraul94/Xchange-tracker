@@ -16,4 +16,5 @@ export interface AppConfig {
   simpleScraperClasses: BrowserScrapers;
   browserScraperClasses: SimpleScrapers;
   concurrency: number;
+  timeout: number;
 }

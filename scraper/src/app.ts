@@ -8,15 +8,18 @@ export class ScrapingSession {
   protected simpleScraperClasses: SimpleScrapers;
   protected browserScraperClasses: BrowserScrapers;
   protected concurrency: number;
+  protected timeout: number;
 
   constructor({
     simpleScraperClasses,
     browserScraperClasses,
-    concurrency,
+    concurrency = 1,
+    timeout = 10000,
   }: AppConfig) {
     this.simpleScraperClasses = simpleScraperClasses;
     this.browserScraperClasses = browserScraperClasses;
     this.concurrency = concurrency;
+    this.timeout = timeout;
   }
 
   async run() {

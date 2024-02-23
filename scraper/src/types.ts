@@ -1,4 +1,7 @@
-import { PopularScraper } from "src/scrapers/popular";
+import { PopularScraper, BanreservasScraper } from "src/scrapers";
 
 export type SimpleScrapers = any[];
-export type BrowserScrapers = (typeof PopularScraper)[];
+export type BrowserScrapers = (
+  | typeof PopularScraper
+  | typeof BanreservasScraper
+)[];
