@@ -1,29 +1,11 @@
 import { ElementHandle, Page } from "puppeteer";
 import { BANK } from "src/enums";
-import { ScrapeResult } from "src/interfaces";
 import { BrowserScraper } from "src/scrapers/base";
-import { validateAmount, delay } from "src/utils";
+import { validateAmount } from "src/utils";
 
 export class BanreservasScraper extends BrowserScraper {
   bank = BANK.BANRESERVAS;
   url = "https://www.banreservas.com";
-
-  async fetchData(): Promise<ScrapeResult> {
-    const page = await this.browser.newPage();
-    await page.goto(this.url);
-    await delay(3000);
-
-    const euroBuyRate = await this.getEuroBuyRate(page);
-    const euroSellRate = await this.getEuroSellRate(page);
-
-    const dollarBuyRate = await this.getDollarBuyRate(page);
-    const dollarSellRate = await this.getDollarSellRate(page);
-
-    return {
-      euro: { bank: this.bank, buy: euroBuyRate, sell: euroSellRate },
-      dollar: { bank: this.bank, buy: dollarBuyRate, sell: dollarSellRate },
-    };
-  }
 
   async parseValue(page: Page, selector: string): Promise<number> {
     const element = (await page.waitForSelector(
