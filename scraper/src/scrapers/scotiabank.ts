@@ -1,17 +1,16 @@
-import { ElementHandle, Page } from "puppeteer";
+import { Page } from "puppeteer";
 import { BANK } from "src/enums";
 import { ScrapeResult } from "src/interfaces";
 import { BrowserScraper } from "src/scrapers/base";
-import { validateAmount, delay } from "src/utils";
+import { validateAmount } from "src/utils";
 
-export class BanreservasScraper extends BrowserScraper {
-  bank = BANK.BANRESERVAS;
-  url = "https://www.banreservas.com";
+export class ScotiabankScraper extends BrowserScraper {
+  bank = BANK.SCOTIABANK;
+  url = "https://do.scotiabank.com/banca-personal/tarifas/tasas-de-cambio.html";
 
   async fetchData(): Promise<ScrapeResult> {
     const page = await this.browser.newPage();
     await page.goto(this.url);
-    await delay(3000);
 
     const euroBuyRate = await this.getEuroBuyRate(page);
     const euroSellRate = await this.getEuroSellRate(page);
@@ -25,35 +24,41 @@ export class BanreservasScraper extends BrowserScraper {
     };
   }
 
-  async parseValue(page: Page, selector: string): Promise<number> {
-    const element = (await page.waitForSelector(
-      selector
-    )) as ElementHandle<HTMLDataElement> | null;
-    if (!element) throw Error("Not found selector");
-
-    const amount = await element.evaluate((e) => e.textContent);
-    if (!amount) throw Error("Invalid amount");
-
-    return parseFloat(amount);
+  async getAllRates(page: Page) {
+    return page.$$eval('td[style="text-align: center;"]', (tds) =>
+      tds.map((td) => td.textContent)
+    ) as Promise<string[]>;
   }
 
   @validateAmount
   async getEuroBuyRate(page: Page): Promise<number> {
-    return this.parseValue(page, ".tasacambio-compraEU");
+    const rates = await this.getAllRates(page);
+
+    return parseFloat(rates[6]);
   }
 
   @validateAmount
   async getEuroSellRate(page: Page): Promise<number> {
-    return this.parseValue(page, ".tasacambio-ventaEU");
+    const rates = await this.getAllRates(page);
+
+    return parseFloat(rates[7]);
   }
 
   @validateAmount
   async getDollarBuyRate(page: Page): Promise<number> {
-    return this.parseValue(page, ".tasacambio-compraUS");
+    const rates = await this.getAllRates(page);
+
+    return parseFloat(rates[3]);
   }
 
   @validateAmount
   async getDollarSellRate(page: Page): Promise<number> {
-    return this.parseValue(page, ".tasacambio-ventaUS");
+    const rates = await this.getAllRates(page);
+
+    return parseFloat(rates[4]);
+  }
+
+  async parseValue(amount: string): Promise<number> {
+    return parseFloat(amount);
   }
 }

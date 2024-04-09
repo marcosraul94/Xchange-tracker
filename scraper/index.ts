@@ -1,14 +1,22 @@
 import { environment } from "src/env";
 import { ScrapingSession } from "src/app";
-import { PopularScraper, BanreservasScraper } from "src/scrapers";
+import {
+  PopularScraper,
+  BanreservasScraper,
+  ScotiabankScraper,
+} from "src/scrapers";
 
 export const handler = async () => {
   console.log(`Running lambda in ${environment} environment.`);
 
   const scrapingSession = new ScrapingSession({
     timeout: 10000,
-    concurrency: 2,
-    browserScraperClasses: [PopularScraper, BanreservasScraper],
+    concurrency: 1,
+    browserScraperClasses: [
+      PopularScraper,
+      BanreservasScraper,
+      ScotiabankScraper,
+    ],
     simpleScraperClasses: [],
   });
 

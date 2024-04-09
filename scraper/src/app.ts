@@ -64,7 +64,7 @@ export class ScrapingSession {
     this.browser = await puppeteer.launch({
       headless: "new",
       timeout: 3000,
-      args: ["--no-sandbox"],
+      args: ["--no-sandbox", "--incognito"],
     });
     console.log(`Browser opened successfully!`);
   }
