@@ -4,6 +4,7 @@ import {
   PopularScraper,
   BanreservasScraper,
   ScotiabankScraper,
+  BHDScraper,
 } from "src/scrapers";
 
 export const handler = async () => {
@@ -16,6 +17,7 @@ export const handler = async () => {
       PopularScraper,
       BanreservasScraper,
       ScotiabankScraper,
+      BHDScraper,
     ],
     simpleScraperClasses: [],
   });

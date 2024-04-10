@@ -6,6 +6,7 @@ export enum ENVIRONMENT {
 
 export const enum BANK {
   POPULAR = "Banco Popular",
-  BANRESERVAS = 'Banreservas',
-  SCOTIABANK = 'Scotiabank'
+  BANRESERVAS = "Banreservas",
+  SCOTIABANK = "Scotiabank",
+  BHD = "BHD",
 }
