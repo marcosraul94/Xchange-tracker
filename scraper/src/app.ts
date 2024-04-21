@@ -1,11 +1,9 @@
 import puppeteer, { Browser } from "puppeteer";
-import { ScraperBase } from "src/scrapers/base";
 import { AppConfig } from "src/interfaces";
 import { SimpleScrapers, BrowserScrapersClasses } from "src/types";
 import { BROWSER_NAME } from "src/enums";
 
 export class ScrapingSession {
-  protected browser?: Browser;
   protected simpleScraperClasses: SimpleScrapers;
   protected browserScrapersClasses: BrowserScrapersClasses;
   protected timeout: number;
