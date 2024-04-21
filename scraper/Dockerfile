@@ -6,7 +6,9 @@ RUN yum install -y chromium
 
 COPY package.json ${LAMBDA_TASK_ROOT}
 COPY package-lock.json ${LAMBDA_TASK_ROOT}
-RUN npm i
+RUN npm i 
+RUN npx puppeteer browsers install firefox
+RUN npx puppeteer browsers install chrome 
 COPY . ${LAMBDA_TASK_ROOT}
 
 CMD [ "index.handler" ]

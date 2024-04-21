@@ -38,9 +38,9 @@ export class ScrapingSession {
           const result = await new Scraper(browser as Browser).run();
           results.push(result);
         }
-
-        console.log("results ->", results);
       }
+
+      console.log("results ->", results);
     } finally {
       await this.closeBrowser(browser);
     }
@@ -62,7 +62,7 @@ export class ScrapingSession {
     console.log(`Opening ${browserName}...`);
     const browser = await puppeteer.launch({
       product: browserName,
-      headless: "new",
+      headless: true,
       timeout: 10000,
       args: ["--no-sandbox"],
     });
