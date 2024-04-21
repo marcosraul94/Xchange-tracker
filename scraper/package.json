@@ -12,7 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "p-limit": "^3.0.0",
-    "puppeteer": "^21.9.0"
+    "puppeteer": "^22.0.0"
   },
   "devDependencies": {
     "resolve-tspaths": "^0.8.18",

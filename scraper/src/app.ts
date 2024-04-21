@@ -1,71 +1,73 @@
 import puppeteer, { Browser } from "puppeteer";
-import pLimit from "p-limit";
 import { ScraperBase } from "src/scrapers/base";
 import { AppConfig } from "src/interfaces";
-import { BrowserScrapers, SimpleScrapers } from "src/types";
+import { SimpleScrapers, BrowserScrapersClasses } from "src/types";
+import { BROWSER_NAME } from "src/enums";
 
 export class ScrapingSession {
   protected browser?: Browser;
   protected simpleScraperClasses: SimpleScrapers;
-  protected browserScraperClasses: BrowserScrapers;
-  protected concurrency: number;
+  protected browserScrapersClasses: BrowserScrapersClasses;
   protected timeout: number;
 
   constructor({
     simpleScraperClasses,
-    browserScraperClasses,
-    concurrency = 1,
+    browserScrapersClasses,
     timeout = 10000,
   }: AppConfig) {
     this.simpleScraperClasses = simpleScraperClasses;
-    this.browserScraperClasses = browserScraperClasses;
-    this.concurrency = concurrency;
+    this.browserScrapersClasses = browserScrapersClasses;
     this.timeout = timeout;
   }
 
   async run() {
-    try {
-      const scrapers = await this.buildScrapers();
-      const limit = pLimit(this.concurrency);
-      const operations = scrapers.map((scraper) => limit(() => scraper.run()));
-      const results = await Promise.all(operations);
+    let openedBrowserName: BROWSER_NAME | undefined;
+    let browser: Browser | undefined;
+    const results = [];
 
-      console.log(results);
+    try {
+      for (const [browserName, Scrapers] of Object.entries(
+        this.browserScrapersClasses
+      )) {
+        if (openedBrowserName !== browserName) {
+          await this.closeBrowser(browser);
+          browser = await this.openBrowser(browserName as BROWSER_NAME);
+          openedBrowserName = browserName as BROWSER_NAME;
+        }
+        for (const Scraper of Scrapers) {
+          const result = await new Scraper(browser as Browser).run();
+          results.push(result);
+        }
+
+        console.log("results ->", results);
+      }
     } finally {
-      await this.closeBrowser();
+      await this.closeBrowser(browser);
     }
 
     console.log(`Completed scraping session`);
   }
 
-  protected async buildScrapers(): Promise<ScraperBase[]> {
-    if (this.browserScraperClasses.length > 0) await this.openBrowser();
-
-    const browserScrapers = this.browserScraperClasses.map(
-      (Scraper) => new Scraper(this.browser as Browser)
-    );
-    const simpleScrapers = this.simpleScraperClasses.map(
-      (Scraper) => new Scraper()
-    );
-
-    return [...browserScrapers, ...simpleScrapers];
-  }
-
-  protected async closeBrowser() {
-    if (!this.browser) return;
+  protected async closeBrowser(browser?: Browser) {
+    if (!browser) return;
 
     console.log(`Closing browser...`);
-    await this.browser.close();
+    await browser.close();
     console.log(`Browser closed successfully!`);
   }
 
-  protected async openBrowser() {
-    console.log(`Opening browser...`);
-    this.browser = await puppeteer.launch({
+  protected async openBrowser(
+    browserName: BROWSER_NAME = BROWSER_NAME.FIREFOX
+  ) {
+    console.log(`Opening ${browserName}...`);
+    const browser = await puppeteer.launch({
+      product: browserName,
       headless: "new",
-      timeout: 3000,
-      args: ["--no-sandbox", "--incognito"],
+      timeout: 10000,
+      args: ["--no-sandbox"],
     });
     console.log(`Browser opened successfully!`);
+
+    return browser;
   }
 }

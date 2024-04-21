@@ -41,6 +41,8 @@ export abstract class BrowserScraper extends ScraperBase {
     const dollarBuyRate = await this.getDollarBuyRate(page);
     const dollarSellRate = await this.getDollarSellRate(page);
 
+    await page.close();
+
     return {
       euro: { bank: this.bank, buy: euroBuyRate, sell: euroSellRate },
       dollar: { bank: this.bank, buy: dollarBuyRate, sell: dollarSellRate },

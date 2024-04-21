@@ -10,3 +10,8 @@ export const enum BANK {
   SCOTIABANK = "Scotiabank",
   BHD = "BHD",
 }
+
+export const enum BROWSER_NAME {
+  FIREFOX = "firefox",
+  CHROME = "chrome",
+}

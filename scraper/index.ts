@@ -6,19 +6,17 @@ import {
   ScotiabankScraper,
   BHDScraper,
 } from "src/scrapers";
+import { BROWSER_NAME } from "src/enums";
 
 export const handler = async () => {
   console.log(`Running lambda in ${environment} environment.`);
 
   const scrapingSession = new ScrapingSession({
     timeout: 10000,
-    concurrency: 1,
-    browserScraperClasses: [
-      PopularScraper,
-      BanreservasScraper,
-      ScotiabankScraper,
-      BHDScraper,
-    ],
+    browserScrapersClasses: {
+      [BROWSER_NAME.FIREFOX]: [ScotiabankScraper, PopularScraper, BanreservasScraper],
+      [BROWSER_NAME.CHROME]: [BHDScraper],
+    },
     simpleScraperClasses: [],
   });
 

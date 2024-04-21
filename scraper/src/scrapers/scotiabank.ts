@@ -6,9 +6,19 @@ import { validateAmount } from "src/utils";
 export class ScotiabankScraper extends BrowserScraper {
   bank = BANK.SCOTIABANK;
   url = "https://do.scotiabank.com/banca-personal/tarifas/tasas-de-cambio.html";
+  selector = 'td[style="text-align: center;"]';
+
+  async loadPage(): Promise<Page> {
+    const page = await this.browser.newPage();
+    page.goto(this.url, { waitUntil: "domcontentloaded" });
+    await page.waitForSelector(this.selector);
+    console.log(`Opened ${this.url}`);
+
+    return page;
+  }
 
   async getAllRates(page: Page) {
-    return page.$$eval('td[style="text-align: center;"]', (tds) =>
+    return page.$$eval(this.selector, (tds) =>
       tds.map((td) => td.textContent)
     ) as Promise<string[]>;
   }
@@ -39,9 +49,5 @@ export class ScotiabankScraper extends BrowserScraper {
     const rates = await this.getAllRates(page);
 
     return parseFloat(rates[4]);
-  }
-
-  async parseValue(amount: string): Promise<number> {
-    return parseFloat(amount);
   }
 }
