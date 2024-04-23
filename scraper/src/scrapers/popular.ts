@@ -1,7 +1,7 @@
 import { ElementHandle, Page } from "puppeteer";
 import { BANK } from "src/enums";
 import { BrowserScraper } from "src/scrapers/base";
-import { validateAmount } from "src/utils";
+import { validateAmount } from "src/utils/decorators";
 
 export class PopularScraper extends BrowserScraper {
   bank = BANK.POPULAR;

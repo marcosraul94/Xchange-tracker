@@ -1,7 +1,7 @@
-import { ElementHandle, Page } from "puppeteer";
+import { Page } from "puppeteer";
 import { BANK } from "src/enums";
 import { BrowserScraper } from "src/scrapers/base";
-import { validateAmount, delay } from "src/utils";
+import { validateAmount } from "src/utils/decorators";
 
 export class BHDScraper extends BrowserScraper {
   bank = BANK.BHD;

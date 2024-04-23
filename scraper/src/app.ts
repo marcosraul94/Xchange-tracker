@@ -9,8 +9,8 @@ export class ScrapingSession {
   protected timeout: number;
 
   constructor({
-    simpleScraperClasses,
-    browserScrapersClasses,
+    simpleScraperClasses = [],
+    browserScrapersClasses = {},
     timeout = 10000,
   }: AppConfig) {
     this.simpleScraperClasses = simpleScraperClasses;

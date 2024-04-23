@@ -1,7 +1,7 @@
 import { Browser, Page } from "puppeteer";
 import { BANK } from "src/enums";
 import { ScrapeResult } from "src/interfaces";
-import { NotImplementedError } from "src/utils";
+import { NotImplementedError } from "src/utils/errors";
 
 export abstract class ScraperBase {
   abstract url?: string;
