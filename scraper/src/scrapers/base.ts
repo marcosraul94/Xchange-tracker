@@ -1,28 +1,37 @@
 import { Browser, Page } from "puppeteer";
 import { BANK } from "src/enums";
 import { ScrapeResult } from "src/interfaces";
+import { NotImplementedError } from "src/utils";
 
 export abstract class ScraperBase {
-  abstract url: string;
+  abstract url?: string;
 
   abstract run(): Promise<ScrapeResult>;
 
   abstract fetchData(): Promise<ScrapeResult>;
 }
 
-export abstract class BrowserScraper extends ScraperBase {
+export class BrowserScraper implements ScraperBase {
   browser: Browser;
-  abstract bank: BANK;
+  url: string = "";
+  bank: BANK = "" as BANK;
 
   constructor(browser: Browser) {
-    super();
     this.browser = browser;
   }
 
-  abstract getEuroBuyRate(page: Page): Promise<number>;
-  abstract getEuroSellRate(page: Page): Promise<number>;
-  abstract getDollarBuyRate(page: Page): Promise<number>;
-  abstract getDollarSellRate(page: Page): Promise<number>;
+  async getEuroBuyRate(page: Page): Promise<number> {
+    throw NotImplementedError;
+  }
+  async getEuroSellRate(page: Page): Promise<number> {
+    throw NotImplementedError;
+  }
+  async getDollarBuyRate(page: Page): Promise<number> {
+    throw NotImplementedError;
+  }
+  async getDollarSellRate(page: Page): Promise<number> {
+    throw NotImplementedError;
+  }
 
   async loadPage(): Promise<Page> {
     const page = await this.browser.newPage();

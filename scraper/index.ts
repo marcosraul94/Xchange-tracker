@@ -5,6 +5,7 @@ import {
   BanreservasScraper,
   ScotiabankScraper,
   BHDScraper,
+  ApapScraper,
 } from "src/scrapers";
 import { BROWSER_NAME } from "src/enums";
 
@@ -14,8 +15,12 @@ export const handler = async () => {
   const scrapingSession = new ScrapingSession({
     timeout: 10000,
     browserScrapersClasses: {
-      [BROWSER_NAME.FIREFOX]: [ScotiabankScraper, PopularScraper, BanreservasScraper],
-      [BROWSER_NAME.CHROME]: [BHDScraper],
+      [BROWSER_NAME.FIREFOX]: [
+        ScotiabankScraper,
+        PopularScraper,
+        BanreservasScraper,
+      ],
+      [BROWSER_NAME.CHROME]: [BHDScraper, ApapScraper],
     },
     simpleScraperClasses: [],
   });

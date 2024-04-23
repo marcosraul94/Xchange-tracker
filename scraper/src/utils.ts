@@ -27,3 +27,10 @@ export function validateAmount(
 export const delay = (delayInms: number) => {
   return new Promise((resolve) => setTimeout(resolve, delayInms));
 };
+
+export class NotImplementedError extends Error {
+  constructor(message?: string) {
+    super(message || 'This method or functionality is not implemented.');
+    this.name = 'NotImplementedError';
+  }
+}

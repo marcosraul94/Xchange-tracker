@@ -1,9 +1,5 @@
 import { BANK } from "src/enums";
-import {
-  BrowserScrapers,
-  SimpleScrapers,
-  BrowserScrapersClasses,
-} from "src/types";
+import { SimpleScrapers, BrowserScrapersClasses } from "src/types";
 
 export interface BankRate {
   bank: BANK;
@@ -17,7 +13,7 @@ export interface ScrapeResult {
 }
 
 export interface AppConfig {
-  simpleScraperClasses: BrowserScrapers;
+  simpleScraperClasses: SimpleScrapers;
   browserScrapersClasses: BrowserScrapersClasses;
   timeout: number;
 }

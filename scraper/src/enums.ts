@@ -9,6 +9,7 @@ export const enum BANK {
   BANRESERVAS = "Banreservas",
   SCOTIABANK = "Scotiabank",
   BHD = "BHD",
+  APAP = 'APAP'
 }
 
 export const enum BROWSER_NAME {
