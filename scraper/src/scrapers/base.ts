@@ -1,6 +1,7 @@
 import { Browser, Page } from "puppeteer";
 import { BANK } from "src/enums";
 import { ScrapeResult } from "src/interfaces";
+import { time } from "src/utils/decorators";
 import { NotImplementedError } from "src/utils/errors";
 
 export abstract class ScraperBase {
@@ -41,6 +42,7 @@ export class BrowserScraper implements ScraperBase {
     return page;
   }
 
+  @time
   async fetchData(): Promise<ScrapeResult> {
     const page = await this.loadPage();
 
