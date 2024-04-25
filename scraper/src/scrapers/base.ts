@@ -1,5 +1,5 @@
 import { Browser, Page } from "puppeteer";
-import { BANK } from "src/enums";
+import { BANK, ELEMENT_TYPE } from "src/enums";
 import { ScrapeResult } from "src/interfaces";
 import { time } from "src/utils/decorators";
 import { NotImplementedError } from "src/utils/errors";
@@ -47,6 +47,26 @@ export class BrowserScraper implements ScraperBase {
     await page.$$eval(selector, (tds) => {
       tds.forEach((td) => (td as any).click());
     });
+  }
+
+  async getSingleRate(
+    selector: string,
+    page: Page,
+    elementType: ELEMENT_TYPE = ELEMENT_TYPE.TXT
+  ) {
+    const element = await page.waitForSelector(selector);
+    if (!element) throw Error("Not found selector");
+
+    let amount;
+    if (elementType === ELEMENT_TYPE.TXT) {
+      amount = await element.evaluate((e) => e.textContent);
+    }
+    if (elementType === ELEMENT_TYPE.INPUT) {
+      amount = await element.evaluate((e) => (e as HTMLInputElement).value);
+    }
+
+    if (!amount) throw Error("Invalid amount");
+    return parseFloat(amount);
   }
 
   @time

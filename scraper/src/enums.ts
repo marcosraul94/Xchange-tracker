@@ -18,3 +18,8 @@ export const enum BROWSER_NAME {
   FIREFOX = "firefox",
   CHROME = "chrome",
 }
+
+export const enum ELEMENT_TYPE {
+  TXT = "txt",
+  INPUT = "input",
+}
