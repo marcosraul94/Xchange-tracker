@@ -69,6 +69,31 @@ export class BrowserScraper implements ScraperBase {
     return parseFloat(amount);
   }
 
+  async getMultipleRates(
+    selector: string,
+    page: Page,
+    elementType: ELEMENT_TYPE = ELEMENT_TYPE.TXT
+  ) {
+    const element = await page.waitForSelector(selector);
+    if (!element) throw Error("Not found selector");
+
+    let amounts: any[] = [];
+    if (elementType === ELEMENT_TYPE.TXT) {
+      amounts = await page.$$eval(selector, (elements) =>
+        elements.map((e) => e.textContent)
+      );
+    }
+    if (elementType === ELEMENT_TYPE.INPUT) {
+      amounts = await page.$$eval(selector, (elements) =>
+        elements.map((e) => (e as HTMLInputElement).value)
+      );
+    }
+
+    if (amounts?.length === 0) throw Error("Invalid amounts");
+
+    return amounts;
+  }
+
   @time
   async fetchData(): Promise<ScrapeResult> {
     const page = await this.loadPage();
