@@ -9,13 +9,6 @@ export class BHDScraper extends BrowserScraper {
   dollarSectionSelector = '[id="3"]';
   euroSectionSelector = '[id="1"]';
 
-  async clickCurrencySection(selector: string, page: Page) {
-    await page.waitForSelector(selector);
-    await page.$$eval(selector, (tds) => {
-      tds.forEach((td) => (td as any).click());
-    });
-  }
-
   async getAllRates(page: Page) {
     const selector = "input.ng-untouched";
     await page.waitForSelector(selector);

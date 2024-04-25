@@ -6,6 +6,7 @@ import {
   ScotiabankScraper,
   BHDScraper,
   ApapScraper,
+  BanescoScraper,
 } from "src/scrapers";
 import { BROWSER_NAME } from "src/enums";
 
@@ -16,6 +17,7 @@ export const handler = async () => {
     timeout: 10000,
     browserScrapersClasses: {
       [BROWSER_NAME.FIREFOX]: [
+        BanescoScraper,
         ScotiabankScraper,
         PopularScraper,
         BanreservasScraper,

@@ -42,6 +42,13 @@ export class BrowserScraper implements ScraperBase {
     return page;
   }
 
+  async clickCurrencySection(selector: string, page: Page) {
+    await page.waitForSelector(selector);
+    await page.$$eval(selector, (tds) => {
+      tds.forEach((td) => (td as any).click());
+    });
+  }
+
   @time
   async fetchData(): Promise<ScrapeResult> {
     const page = await this.loadPage();
