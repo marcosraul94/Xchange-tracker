@@ -6,6 +6,7 @@ import { validateAmount } from "src/utils/decorators";
 export class BHDScraper extends BrowserScraper {
   bank = BANK.BHD;
   url = "https://bhd.com.do/calculators?calculator=DIVISAS";
+  
   dollarSectionSelector = '[id="3"]';
   euroSectionSelector = '[id="1"]';
 

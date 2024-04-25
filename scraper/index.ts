@@ -7,6 +7,7 @@ import {
   BHDScraper,
   ApapScraper,
   BanescoScraper,
+  PromericaScraper,
 } from "src/scrapers";
 import { BROWSER_NAME } from "src/enums";
 
@@ -22,7 +23,7 @@ export const handler = async () => {
         PopularScraper,
         BanreservasScraper,
       ],
-      [BROWSER_NAME.CHROME]: [BHDScraper, ApapScraper],
+      [BROWSER_NAME.CHROME]: [PromericaScraper, BHDScraper, ApapScraper],
     },
     simpleScraperClasses: [],
   });

@@ -4,4 +4,5 @@ export { BanreservasScraper } from "src/scrapers/banreservas";
 export { ScotiabankScraper } from "src/scrapers/scotiabank";
 export { BHDScraper } from "src/scrapers/bhd";
 export { ApapScraper } from "src/scrapers/apap";
-export { BanescoScraper } from 'src/scrapers/banesco';
+export { BanescoScraper } from "src/scrapers/banesco";
+export { PromericaScraper } from "src/scrapers/promerica";
