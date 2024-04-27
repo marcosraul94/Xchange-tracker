@@ -19,6 +19,10 @@ jobs:
         working-directory: scraper
         run: npm i
 
+      - name: Download browsers
+        working-directory: scraper
+        run: npx puppeteer browsers install firefox && npx puppeteer browsers install chrome
+
       - name: Build app
         working-directory: scraper
         run: npm run build
