@@ -10,7 +10,7 @@ export function validateAmount(
   descriptor.value = async function (...args: any[]) {
     try {
       const amount: number = await originalMethod.apply(this, args);
-      if (isNaN(amount) || !isFinite(amount)) {
+      if (amount === 0 || isNaN(amount) || !isFinite(amount)) {
         throw Error(`Invalid number: ${amount}`);
       }
 
