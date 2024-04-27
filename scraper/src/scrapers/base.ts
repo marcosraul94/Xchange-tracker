@@ -1,4 +1,5 @@
 import { Browser, Page } from "puppeteer";
+import { Retryable } from "typescript-retry-decorator";
 import { BANK, ELEMENT_TYPE } from "src/enums";
 import { ScrapeResult } from "src/interfaces";
 import { time } from "src/utils/decorators";
@@ -94,7 +95,7 @@ export class BrowserScraper implements ScraperBase {
     return amounts;
   }
 
-  @time
+  @Retryable({ maxAttempts: 3 })
   async fetchData(): Promise<ScrapeResult> {
     const page = await this.loadPage();
 
@@ -112,6 +113,7 @@ export class BrowserScraper implements ScraperBase {
     };
   }
 
+  @time
   async run(): Promise<ScrapeResult> {
     console.log(`Fetching data from ${this.bank}...`);
     const fetchedData = await this.fetchData();
