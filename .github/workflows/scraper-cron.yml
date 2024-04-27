@@ -1,9 +1,11 @@
 name: CI
 
-on: push
+on:
+  schedule:
+    - cron: '0 * * * *' # Run every day at the start of each hour
 
 jobs:
-  Build:
+  Get:
     runs-on: ubuntu-latest
 
     steps:
@@ -13,7 +15,7 @@ jobs:
       - name: Setup node
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 22
 
       - name: Install dependencies
         working-directory: scraper
@@ -27,6 +29,6 @@ jobs:
         working-directory: scraper
         run: npm run build
 
-      - name: Check app is working
+      - name: Run scraping session and save data
         working-directory: scraper
         run: node build/index.js

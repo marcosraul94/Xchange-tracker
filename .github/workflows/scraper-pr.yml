@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - "!main"
+
+jobs:
+  Get:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout commit
+        uses: actions/checkout@v3
+
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        working-directory: scraper
+        run: npm i
+
+      - name: Download browsers
+        working-directory: scraper
+        run: npx puppeteer browsers install firefox && npx puppeteer browsers install chrome
+
+      - name: Build app
+        working-directory: scraper
+        run: npm run build
+
+      - name: Scrape everything to check if it's working
+        working-directory: scraper
+        run: node build/index.js
