@@ -7,35 +7,23 @@ export class BanreservasScraper extends BrowserScraper {
   bank = BANK.BANRESERVAS;
   url = "https://www.banreservas.com";
 
-  async parseValue(page: Page, selector: string): Promise<number> {
-    const element = (await page.waitForSelector(
-      selector
-    )) as ElementHandle<HTMLDataElement> | null;
-    if (!element) throw Error("Not found selector");
-
-    const amount = await element.evaluate((e) => e.textContent);
-    if (!amount) throw Error("Invalid amount");
-
-    return parseFloat(amount);
-  }
-
   @validateAmount
   async getEuroBuyRate(page: Page): Promise<number> {
-    return this.parseValue(page, ".tasacambio-compraEU");
+    return this.getSingleRate(".tasacambio-compraEU", page);
   }
 
   @validateAmount
   async getEuroSellRate(page: Page): Promise<number> {
-    return this.parseValue(page, ".tasacambio-ventaEU");
+    return this.getSingleRate(".tasacambio-ventaEU", page);
   }
 
   @validateAmount
   async getDollarBuyRate(page: Page): Promise<number> {
-    return this.parseValue(page, ".tasacambio-compraUS");
+    return this.getSingleRate(".tasacambio-compraUS", page);
   }
 
   @validateAmount
   async getDollarSellRate(page: Page): Promise<number> {
-    return this.parseValue(page, ".tasacambio-ventaUS");
+    return this.getSingleRate(".tasacambio-ventaUS", page);
   }
 }
