@@ -46,6 +46,8 @@ export class ScrapingSession {
     console.log(`Completed scraping session`);
   }
 
+  async save() {}
+
   protected async closeBrowser(browser?: Browser) {
     if (!browser) return;
 

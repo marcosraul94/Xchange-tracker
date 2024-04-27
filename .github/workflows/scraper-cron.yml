@@ -1,8 +1,8 @@
-name: CI
+name: Cron job scraping session
 
 on:
   schedule:
-    - cron: '0 * * * *' # Run every day at the start of each hour
+    - cron: '*/6 * * * *' # Run every day at every 10th minute
 
 jobs:
   Get:
