@@ -1,0 +1,24 @@
+name: CI
+
+on: push
+
+jobs:
+  Deploy-scraper:
+    runs-on: ubuntu-latest
+    container: node:18
+
+    steps:
+      - name: Checkout commit
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        working-directory: ./scraper
+        run: npm i
+
+      - name: Build app
+        working-directory: ./scraper
+        run: npm run build
+
+      - name: Check app is working
+        working-directory: ./scraper
+        run: node build/index.js

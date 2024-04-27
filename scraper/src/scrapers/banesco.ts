@@ -8,7 +8,6 @@ export class BanescoScraper extends BrowserScraper {
   url = "https://www.banesco.com.do/";
 
   currencyTogglerSelector = "div.calculator__currency-span-1";
-
   buySelector = "div.calculator__buy-inputs > div:nth-child(2) > input";
   sellSelector = "div.calculator__sell-inputs > div:nth-child(2) > input";
 
