@@ -4,3 +4,10 @@ export class NotImplementedError extends Error {
     this.name = "NotImplementedError";
   }
 }
+
+export class InvalidAmountError extends Error {
+  constructor(amount: any) {
+    super(`Invalid number: ${amount}`);
+    this.name = "InvalidAmountError";
+  }
+}

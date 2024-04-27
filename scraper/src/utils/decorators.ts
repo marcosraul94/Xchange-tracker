@@ -1,3 +1,5 @@
+import { InvalidAmountError } from "src/utils/errors";
+
 export function validateAmount(
   target: any,
   key: string,
@@ -11,7 +13,7 @@ export function validateAmount(
     try {
       const amount: number = await originalMethod.apply(this, args);
       if (amount === 0 || isNaN(amount) || !isFinite(amount)) {
-        throw Error(`Invalid number: ${amount}`);
+        throw new InvalidAmountError(amount);
       }
 
       return amount;
