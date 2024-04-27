@@ -9,7 +9,7 @@ services:
     stdin_open: true
     tty: true
     volumes:
-      - ./scraper:/var/task
+      - ./scraper:/app
     environment:
       DYNAMO_ENDPOINT: "http://db:8000"
       AWS_REGION: "us-east-1"

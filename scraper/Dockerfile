@@ -1,14 +1,23 @@
-FROM public.ecr.aws/lambda/nodejs:18
+FROM ubuntu:24.04
 
-RUN yum install -y amazon-linux-extras
-RUN amazon-linux-extras install epel -y
-RUN yum install -y chromium
+WORKDIR /app
+COPY package.json .
+COPY package-lock.json .
 
-COPY package.json ${LAMBDA_TASK_ROOT}
-COPY package-lock.json ${LAMBDA_TASK_ROOT}
+# Install node 22
+RUN apt update
+RUN apt install -y curl
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash -
+RUN apt-get update && apt-get install -y nodejs
+
+# App dependencies
 RUN npm i 
-RUN npx puppeteer browsers install firefox
-RUN npx puppeteer browsers install chrome 
-COPY . ${LAMBDA_TASK_ROOT}
 
-CMD [ "index.handler" ]
+# Install browsers
+RUN apt-get install -y packagekit-gtk3-module
+RUN apt-get install -y libasound2t64
+RUN npx puppeteer browsers install firefox
+RUN npx puppeteer browsers install chrome
+
+COPY . .
