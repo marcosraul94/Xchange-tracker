@@ -2,7 +2,7 @@ name: Cron job scraping session
 
 on:
   schedule:
-    - cron: '*/6 * * * *' # Run every day at every 10th minute
+    - cron: '*/15 * * * *' # Run every day every 15 minutes
 
 jobs:
   Get:
@@ -10,7 +10,7 @@ jobs:
 
     steps:
       - name: Checkout commit
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup node
         uses: actions/setup-node@v4
