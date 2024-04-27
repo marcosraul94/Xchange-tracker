@@ -3,18 +3,19 @@ name: CI
 on: push
 
 jobs:
-  Download:
+  Build:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout commit
         uses: actions/checkout@v3
 
-  Build:
-    runs-on: ubuntu-latest
-    needs: Download
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: npm
 
-    steps:
       - name: Install dependencies
         working-directory: scraper
         run: npm i
