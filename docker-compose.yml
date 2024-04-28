@@ -10,6 +10,8 @@ services:
     tty: true
     volumes:
       - ./scraper:/app
+    depends_on:
+      - api
 
   api:
     platform: linux/amd64
@@ -25,6 +27,8 @@ services:
       AWS_ACCESS_KEY_ID: test
       AWS_SECRET_ACCESS_KEY: test
       PYTHONUNBUFFERED: TRUE
+    depends_on:
+      - db
 
   db:
     command: "-jar DynamoDBLocal.jar -sharedDb -inMemory"
