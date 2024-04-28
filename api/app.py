@@ -1,5 +1,5 @@
 from flask import Flask, request
-from api.src.views.banks_rates import CreateBanksRates, GetBanksRates
+from src.views.banks_rates import CreateBanksRates, GetBanksRates
 
 app = Flask(__name__)
 
