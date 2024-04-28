@@ -31,13 +31,15 @@ export function time(target: any, key: string, descriptor: PropertyDescriptor) {
 
   descriptor.value = async function (...args: any[]) {
     const now = new Date();
-    const result = await originalMethod.apply(this, args);
+    try {
+      const result = await originalMethod.apply(this, args);
 
-    const after = new Date();
-    const seconds = ((after.getTime() - now.getTime()) / 1000).toFixed(2);
-    console.log(`Time: ${seconds}s`);
-
-    return result;
+      return result;
+    } finally {
+      const after = new Date();
+      const seconds = ((after.getTime() - now.getTime()) / 1000).toFixed(2);
+      console.log(`Time: ${seconds}s`);
+    }
   };
 
   return descriptor;
