@@ -9,23 +9,21 @@ import {
   BanescoScraper,
   PromericaScraper,
 } from "src/scrapers";
-import { BROWSER_NAME } from "src/enums";
 
 export const handler = async () => {
   console.log(`Running lambda in ${environment} environment.`);
 
   const scrapingSession = new ScrapingSession({
     timeout: 10000,
-    browserScrapersClasses: {
-      [BROWSER_NAME.FIREFOX]: [
-        BanescoScraper,
-        ScotiabankScraper,
-        PopularScraper,
-        BanreservasScraper,
-      ],
-      [BROWSER_NAME.CHROME]: [PromericaScraper, BHDScraper, ApapScraper],
-    },
-    simpleScraperClasses: [],
+    Scrapers: [
+      BanescoScraper,
+      ScotiabankScraper,
+      PopularScraper,
+      BanreservasScraper,
+      ApapScraper,
+      PromericaScraper,
+      BHDScraper,
+    ],
   });
 
   await scrapingSession.run();

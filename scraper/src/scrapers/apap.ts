@@ -1,9 +1,10 @@
 import { ElementHandle, Page } from "puppeteer";
-import { BANK } from "src/enums";
+import { BANK, BROWSER_NAME } from "src/enums";
 import { BrowserScraper } from "src/scrapers/base";
 import { validateAmount } from "src/utils/decorators";
 
 export class ApapScraper extends BrowserScraper {
+  static browserName = BROWSER_NAME.CHROME;
   bank = BANK.APAP;
   url = "https://apap.com.do/";
 

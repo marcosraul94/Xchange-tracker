@@ -1,9 +1,10 @@
 import { Page } from "puppeteer";
-import { BANK, ELEMENT_TYPE } from "src/enums";
+import { BANK, BROWSER_NAME, ELEMENT_TYPE } from "src/enums";
 import { BrowserScraper } from "src/scrapers/base";
 import { validateAmount } from "src/utils/decorators";
 
 export class BHDScraper extends BrowserScraper {
+  static browserName = BROWSER_NAME.CHROME;
   bank = BANK.BHD;
   url = "https://bhd.com.do/calculators?calculator=DIVISAS";
 

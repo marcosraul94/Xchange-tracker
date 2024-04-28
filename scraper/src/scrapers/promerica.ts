@@ -1,9 +1,10 @@
 import { Page } from "puppeteer";
-import { BANK } from "src/enums";
+import { BANK, BROWSER_NAME } from "src/enums";
 import { BrowserScraper } from "src/scrapers/base";
 import { validateAmount } from "src/utils/decorators";
 
 export class PromericaScraper extends BrowserScraper {
+  static browserName = BROWSER_NAME.CHROME;
   bank = BANK.PROMERICA;
   url = "https://www.promerica.com.do/";
 

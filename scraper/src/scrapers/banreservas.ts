@@ -1,5 +1,5 @@
 import { ElementHandle, Page } from "puppeteer";
-import { BANK } from "src/enums";
+import { BANK, BROWSER_NAME } from "src/enums";
 import { BrowserScraper } from "src/scrapers/base";
 import { validateAmount } from "src/utils/decorators";
 

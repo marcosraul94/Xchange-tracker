@@ -1,47 +1,42 @@
 import puppeteer, { Browser } from "puppeteer";
 import { AppConfig, ScrapingResult } from "src/interfaces";
-import { SimpleScrapers, BrowserScrapersClasses } from "src/types";
-import { BROWSER_NAME } from "src/enums";
+import { BrowserScrapers } from "src/types";
+import { BANK, BROWSER_NAME } from "src/enums";
 
 export class ScrapingSession {
-  protected simpleScraperClasses: SimpleScrapers;
-  protected browserScrapersClasses: BrowserScrapersClasses;
+  protected Scrapers: BrowserScrapers = [];
   protected timeout: number;
   public results: ScrapingResult[] = [];
+  public failedBanks: BANK[] = [];
 
-  constructor({
-    simpleScraperClasses = [],
-    browserScrapersClasses = {},
-    timeout = 10000,
-  }: AppConfig) {
-    this.simpleScraperClasses = simpleScraperClasses;
-    this.browserScrapersClasses = browserScrapersClasses;
+  constructor({ Scrapers = [], timeout = 10000 }: AppConfig) {
+    this.Scrapers = [...Scrapers];
+    this.Scrapers.sort((Scraper) => Scraper.browserName as any);
+
     this.timeout = timeout;
   }
 
   async run() {
-    let openedBrowserName: BROWSER_NAME | undefined;
     let browser: Browser | undefined;
+    let browserName: BROWSER_NAME | undefined;
 
-    try {
-      for (const [browserName, Scrapers] of Object.entries(
-        this.browserScrapersClasses
-      )) {
-        if (openedBrowserName !== browserName) {
-          await this.closeBrowser(browser);
-          browser = await this.openBrowser(browserName as BROWSER_NAME);
-          openedBrowserName = browserName as BROWSER_NAME;
-        }
-        for (const Scraper of Scrapers) {
-          const result = await new Scraper(browser as Browser).run();
-          if (result) this.results.push(result);
-        }
+    for (const Scraper of this.Scrapers) {
+      if (Scraper.browserName !== browserName) {
+        await this.closeBrowser(browser);
+        browser = await this.openBrowser(Scraper.browserName);
+        browserName = Scraper.browserName;
       }
-    } finally {
-      await this.closeBrowser(browser);
+
+      const scraper = new Scraper(browser as Browser);
+      const result = await scraper.run();
+
+      if (result) this.results.push(result);
+      else this.failedBanks.push(scraper.bank);
     }
 
-    console.log(`Completed scraping session`);
+    await this.closeBrowser(browser);
+
+    console.log(`Completed scraping session!`);
   }
 
   async save() {}

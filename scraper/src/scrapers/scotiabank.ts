@@ -1,9 +1,10 @@
-import { Page } from "puppeteer";
-import { BANK } from "src/enums";
+import { Browser, Page } from "puppeteer";
+import { BANK, BROWSER_NAME } from "src/enums";
 import { BrowserScraper } from "src/scrapers/base";
 import { validateAmount } from "src/utils/decorators";
 
 export class ScotiabankScraper extends BrowserScraper {
+  static browserName = BROWSER_NAME.CHROME;
   bank = BANK.SCOTIABANK;
   url = "https://do.scotiabank.com/banca-personal/tarifas/tasas-de-cambio.html";
   ratesSelector = 'td[style="text-align: center;"]';

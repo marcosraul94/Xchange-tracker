@@ -1,6 +1,6 @@
 import { Browser, Page } from "puppeteer";
 import { Retryable } from "typescript-retry-decorator";
-import { BANK, ELEMENT_TYPE } from "src/enums";
+import { BANK, BROWSER_NAME, ELEMENT_TYPE } from "src/enums";
 import { ScrapingResult } from "src/interfaces";
 import { time } from "src/utils/decorators";
 import { NotImplementedError } from "src/utils/errors";
@@ -14,6 +14,7 @@ export abstract class ScraperBase {
 }
 
 export class BrowserScraper implements ScraperBase {
+  static browserName: BROWSER_NAME = BROWSER_NAME.FIREFOX;
   browser: Browser;
   url: string = "";
   bank: BANK = "" as BANK;
