@@ -7,7 +7,7 @@ export interface BankRate {
   buy: number;
 }
 
-export interface ScrapeResult {
+export interface ScrapingResult {
   dollar: BankRate;
   euro: BankRate;
 }

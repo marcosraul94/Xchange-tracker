@@ -1,5 +1,5 @@
 import puppeteer, { Browser } from "puppeteer";
-import { AppConfig } from "src/interfaces";
+import { AppConfig, ScrapingResult } from "src/interfaces";
 import { SimpleScrapers, BrowserScrapersClasses } from "src/types";
 import { BROWSER_NAME } from "src/enums";
 
@@ -7,6 +7,7 @@ export class ScrapingSession {
   protected simpleScraperClasses: SimpleScrapers;
   protected browserScrapersClasses: BrowserScrapersClasses;
   protected timeout: number;
+  public results: ScrapingResult[] = [];
 
   constructor({
     simpleScraperClasses = [],
@@ -21,7 +22,6 @@ export class ScrapingSession {
   async run() {
     let openedBrowserName: BROWSER_NAME | undefined;
     let browser: Browser | undefined;
-    const results = [];
 
     try {
       for (const [browserName, Scrapers] of Object.entries(
@@ -34,11 +34,9 @@ export class ScrapingSession {
         }
         for (const Scraper of Scrapers) {
           const result = await new Scraper(browser as Browser).run();
-          results.push(result);
+          if (result) this.results.push(result);
         }
       }
-
-      console.log("results ->", results);
     } finally {
       await this.closeBrowser(browser);
     }

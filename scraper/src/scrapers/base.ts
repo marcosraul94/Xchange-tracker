@@ -1,16 +1,16 @@
 import { Browser, Page } from "puppeteer";
 import { Retryable } from "typescript-retry-decorator";
 import { BANK, ELEMENT_TYPE } from "src/enums";
-import { ScrapeResult } from "src/interfaces";
+import { ScrapingResult } from "src/interfaces";
 import { time } from "src/utils/decorators";
 import { NotImplementedError } from "src/utils/errors";
 
 export abstract class ScraperBase {
   abstract url?: string;
 
-  abstract run(): Promise<ScrapeResult>;
+  abstract run(): Promise<ScrapingResult>;
 
-  abstract fetchData(): Promise<ScrapeResult>;
+  abstract fetchData(): Promise<ScrapingResult>;
 }
 
 export class BrowserScraper implements ScraperBase {
@@ -96,7 +96,7 @@ export class BrowserScraper implements ScraperBase {
   }
 
   @Retryable({ maxAttempts: 3 })
-  async fetchData(): Promise<ScrapeResult> {
+  async fetchData(): Promise<ScrapingResult> {
     const page = await this.loadPage();
 
     const euroBuyRate = await this.getEuroBuyRate(page);
@@ -114,7 +114,7 @@ export class BrowserScraper implements ScraperBase {
   }
 
   @time
-  async run(): Promise<ScrapeResult> {
+  async run(): Promise<ScrapingResult> {
     console.log(`Fetching data from ${this.bank}...`);
     const fetchedData = await this.fetchData();
     console.log(`Fetch completed from ${this.bank}!`);

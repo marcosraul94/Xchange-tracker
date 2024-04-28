@@ -29,6 +29,9 @@ export const handler = async () => {
   });
 
   await scrapingSession.run();
+  await scrapingSession.save();
+
+  console.log(scrapingSession.results);
 };
 
 handler();
