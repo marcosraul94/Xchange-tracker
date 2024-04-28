@@ -44,3 +44,23 @@ export function time(target: any, key: string, descriptor: PropertyDescriptor) {
 
   return descriptor;
 }
+
+export function catchError(
+  target: any,
+  key: string,
+  descriptor: PropertyDescriptor
+) {
+  const originalMethod = descriptor.value;
+
+  descriptor.value = async function (...args: any[]) {
+    try {
+      const result = await originalMethod.apply(this, args);
+
+      return result;
+    } catch (err) {
+      console.log(`Error found: ${err}`);
+    }
+  };
+
+  return descriptor;
+}

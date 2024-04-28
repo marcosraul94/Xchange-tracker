@@ -29,6 +29,7 @@ export const handler = async () => {
   await scrapingSession.run();
   await scrapingSession.save();
 
+  console.log(scrapingSession.failedBanks);
   console.log(scrapingSession.results);
 };
 

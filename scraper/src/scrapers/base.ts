@@ -2,7 +2,7 @@ import { Browser, Page } from "puppeteer";
 import { Retryable } from "typescript-retry-decorator";
 import { BANK, BROWSER_NAME, ELEMENT_TYPE } from "src/enums";
 import { ScrapingResult } from "src/interfaces";
-import { time } from "src/utils/decorators";
+import { catchError, time } from "src/utils/decorators";
 import { NotImplementedError } from "src/utils/errors";
 
 export abstract class ScraperBase {
@@ -115,6 +115,7 @@ export class BrowserScraper implements ScraperBase {
   }
 
   @time
+  @catchError
   async run(): Promise<ScrapingResult> {
     console.log(`Fetching data from ${this.bank}...`);
     const fetchedData = await this.fetchData();
