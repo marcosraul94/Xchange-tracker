@@ -2,7 +2,7 @@ from .base import View
 from src.db.client import dynamodb
 
 
-class GetRates(View):
+class GetBanksRates(View):
     def __init__(self) -> None:
         pass
 
@@ -29,7 +29,7 @@ class GetRates(View):
         return self.format_response("Hello world")
 
 
-class CreateRates(View):
+class CreateBanksRates(View):
     def __init__(self) -> None:
         pass
 

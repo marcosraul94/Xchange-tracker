@@ -1,12 +1,12 @@
 from flask import Flask, request
-from src.views.rates import CreateRates, GetRates
+from api.src.views.banks_rates import CreateBanksRates, GetBanksRates
 
 app = Flask(__name__)
 
 
-@app.route("/rates", methods=["GET", "POST"])
-def rates():
+@app.route("/banks_rates", methods=["GET", "POST"])
+def banks_rates():
     if request.method == "POST":
-        return CreateRates().render()
+        return CreateBanksRates().render()
 
-    return GetRates().render()
+    return GetBanksRates().render()
