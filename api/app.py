@@ -1,5 +1,6 @@
 from flask import Flask, request
 from src.views.banks_rates import CreateBanksRates, GetBanksRates
+from src.views.migrations import RunMigrations
 
 app = Flask(__name__)
 
@@ -10,3 +11,8 @@ def banks_rates():
         return CreateBanksRates().render()
 
     return GetBanksRates().render()
+
+
+@app.route("/migrations", methods=["GET"])
+def migrate():
+    return RunMigrations().render()
