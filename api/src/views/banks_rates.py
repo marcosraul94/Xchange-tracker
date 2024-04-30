@@ -1,5 +1,5 @@
 from .base import View
-from src.db.client import dynamodb
+import src.db as db
 
 
 class GetBanksRates(View):
@@ -7,7 +7,7 @@ class GetBanksRates(View):
         pass
 
     def render(self):
-        table = dynamodb.client.create_table(
+        table = db.get_client().create_table(
             TableName="testing",
             KeySchema=[
                 {"AttributeName": "year", "KeyType": "HASH"},  # Partition key
@@ -24,7 +24,7 @@ class GetBanksRates(View):
         )
         table.wait_until_exists()
 
-        print("I am here", list(dynamodb.client.tables.all()))
+        print("I am here", list(db.get_client().tables.all()))
 
         return self.format_response("Hello world")
 

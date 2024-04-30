@@ -1,3 +1,21 @@
+Models:
+
+Bank: id, name
+Rate: id, currency, amount
+
+Relationships
+Bank has multiple rates
+A Rate belongs to a Bank
+
+Access patterns                                             PK                              SK
+Get bank by id                                              b#id                    
+Get all banks                                               GSI on entity type = bank
+Get all rates for a certain day                             GSI on entity type = rate       SK.begins(created_at)
+Get all rates for a bank                                    b#id                            SK.begins(r#id)
+
+
+
+
 Next steps for project:
 
 - Create BankRate model
