@@ -15,3 +15,6 @@ test:
 
 create-migration:
 	python -m src.scripts.create_migration --name $(name)
+
+migrate:
+	python -m src.views.migrations

@@ -6,7 +6,7 @@ def migrate():
     client = get_client()
 
     table = client.create_table(
-        TableName=table_name + 'hads',
+        TableName=table_name,
         KeySchema=[
             {"AttributeName": "pk", "KeyType": "HASH"},
             {"AttributeName": "sk", "KeyType": "RANGE"},

@@ -3,7 +3,9 @@ from enum import Enum
 
 
 class EntityType(Enum):
+    BANK = "bank"
     BANK_RATE = "bank rate"
+    MIGRATION = "migration"
 
 
 class Currency(Enum):

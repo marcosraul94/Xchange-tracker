@@ -36,16 +36,19 @@ class RunMigrations(View):
 
         return module
 
+    def migrate(self, migration: str):
+        migration_module = self.import_migration_module(migration)
+
+        print(f"Running {migration} migration...")
+        migration_module.migrate()
+        print(f"{migration} ran successfully!")
+
     def render(self):
         executed_migrations = []
 
         try:
             for migration in self.migrations_to_execute:
-                migration_module = self.import_migration_module(migration)
-
-                print(f"Running {migration} migration...")
-                migration_module.migrate()
-                print(f"{migration} ran successfully!")
+                self.migrate(migration)
 
                 executed_migrations.append(migration)
 
@@ -58,3 +61,10 @@ class RunMigrations(View):
                 {"Executed migrations": executed_migrations, "error": str(e)},
                 status=500,
             )
+
+
+if __name__ == "__main__":
+    from flask import Flask
+
+    with Flask(__name__).app_context():
+        RunMigrations().render()
