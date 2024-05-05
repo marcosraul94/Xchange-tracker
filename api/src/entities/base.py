@@ -28,10 +28,25 @@ class Entity:
         }
 
     @classmethod
-    def from_serialized(cls, serialized: dict):
-        kwargs = DictSerialization.deserialize(serialized)
+    def from_serialized(
+        cls,
+        serialized: dict,
+        constructor_keys=None,
+        post_creation_keys=["created_at", "updated_at"],
+    ):
+        props = DictSerialization.deserialize(serialized)
+        constructor_keys = (
+            props
+            if not constructor_keys
+            else {k: v for k, v in props.items() if k in constructor_keys}
+        )
 
-        return cls(**kwargs)
+        instance = cls(**constructor_keys)
+
+        for k in post_creation_keys:
+            setattr(instance, k, props[k])
+
+        return instance
 
     def __eq__(self, value: "Entity") -> bool:
         return self.to_dict() == value.to_dict()

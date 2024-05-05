@@ -10,3 +10,7 @@ class Bank(Entity):
 
         self.name = name
         super().__init__(pk, sk, entity_type)
+
+    @classmethod
+    def from_serialized(cls, serialized: dict):
+        return super().from_serialized(serialized, constructor_keys=["name"])

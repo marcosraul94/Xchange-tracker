@@ -1,6 +1,5 @@
 from src.entities.base import Entity
 from src.constants import EntityType
-from src.utils.serialization import DictSerialization
 
 
 class Migration(Entity):
@@ -14,9 +13,4 @@ class Migration(Entity):
 
     @classmethod
     def from_serialized(cls, serialized: dict):
-        deserialized = DictSerialization.deserialize(serialized)
-        instance = Migration(deserialized["name"])
-        instance.created_at = deserialized["created_at"]
-        instance.updated_at = deserialized["updated_at"]
-
-        return instance
+        return super().from_serialized(serialized, constructor_keys=["name"])
