@@ -1,5 +1,5 @@
 from datetime import datetime, UTC
-from src.constants import EntityType
+from src.enums import EntityType
 from src.utils.serialization import DictSerialization
 
 

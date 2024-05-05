@@ -1,5 +1,5 @@
 import unittest
-from src.constants import EntityType
+from src.enums import EntityType
 from src.entities.migration import Migration
 from src.utils.serialization import DictSerialization
 

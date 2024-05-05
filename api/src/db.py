@@ -1,5 +1,10 @@
 import boto3
-import src.env as env
+from src.constants import (
+    dynamo_endpoint,
+    aws_region,
+    aws_access_key_id,
+    aws_secret_access_key,
+)
 
 _db = None
 
@@ -10,10 +15,10 @@ def get_client():
     if not _db:
         _db = boto3.resource(
             "dynamodb",
-            endpoint_url=env.dynamo_endpoint,
-            region_name=env.aws_region,
-            aws_access_key_id=env.aws_access_key_id,
-            aws_secret_access_key=env.aws_secret_access_key,
+            endpoint_url=dynamo_endpoint,
+            region_name=aws_region,
+            aws_access_key_id=aws_access_key_id,
+            aws_secret_access_key=aws_secret_access_key,
         )
 
     return _db
