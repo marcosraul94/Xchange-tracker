@@ -2,6 +2,7 @@ import unittest
 from datetime import datetime, UTC
 from src.entities.base import Entity
 from src.constants import EntityType
+from src.utils.serialization import DictSerialization
 
 
 class TestEntity(unittest.TestCase):
@@ -33,27 +34,22 @@ class TestEntity(unittest.TestCase):
             },
         )
 
-    def test_serialize(self):
-        serialized = self.entity.serialize()
-
-        self.assertIsInstance(serialized["created_at"], str)
-        self.assertIsInstance(serialized["updated_at"], str)
-        self.assertEqual(serialized["entity_type"], EntityType.BANK.value)
-
     def test_from_serialized(self):
-        serialized = self.entity.serialize()
+        serialized = DictSerialization.serialize(self.entity.to_dict())
         entity = Entity.from_serialized(serialized)
 
         for key in ["pk", "sk", "entity_type", "created_at", "updated_at"]:
             self.assertEqual(getattr(entity, key), getattr(self.entity, key))
 
     def test_equality(self):
-        same_entity = Entity.from_serialized(self.entity.serialize())
+        serialized = DictSerialization.serialize(self.entity.to_dict())
+        same_entity = Entity.from_serialized(serialized)
 
         self.assertEqual(same_entity, self.entity)
 
     def test_inequality(self):
-        different_entity = Entity.from_serialized(self.entity.serialize())
+        serialized = DictSerialization.serialize(self.entity.to_dict())
+        different_entity = Entity.from_serialized(serialized)
         different_entity.sk = "different"
 
         self.assertNotEqual(different_entity, self.entity)

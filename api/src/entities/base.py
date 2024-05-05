@@ -1,6 +1,6 @@
 from datetime import datetime, UTC
-from enum import Enum
 from src.constants import EntityType
+from src.utils.serialization import DictSerialization
 
 
 class Entity:
@@ -27,30 +27,9 @@ class Entity:
             if not key.startswith("_") and not callable(getattr(self, key))
         }
 
-    def serialize(self):
-        serialized = {}
-
-        for key, value in self.to_dict().items():
-            if isinstance(value, datetime):
-                serialized[key] = value.isoformat()
-            elif isinstance(value, Enum):
-                serialized[key] = value.value
-            else:
-                serialized[key] = value
-
-        return serialized
-
     @classmethod
-    def from_serialized(cls, entity: dict):
-        kwargs = {}
-
-        for key, value in entity.items():
-            if key in ["created_at", "updated_at"]:
-                kwargs[key] = datetime.fromisoformat(value)
-            elif key == "entity_type":
-                kwargs[key] = EntityType(value)
-            else:
-                kwargs[key] = value
+    def from_serialized(cls, serialized: dict):
+        kwargs = DictSerialization.deserialize(serialized)
 
         return cls(**kwargs)
 

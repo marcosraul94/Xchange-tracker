@@ -1,6 +1,7 @@
 import src.db as db
 from src.constants import table_name
 from src.entities.base import Entity
+from src.utils.serialization import DictSerialization
 
 
 class Repository:
@@ -9,7 +10,9 @@ class Repository:
         self.table = client.Table(table_name)
 
     def create(self, entity: Entity):
-        self.table.put_item(Item={**entity.serialize()})
+        serialized = DictSerialization.serialize(entity.to_dict())
+
+        self.table.put_item(Item={**serialized})
 
     def update(self, entity):
         raise NotImplementedError

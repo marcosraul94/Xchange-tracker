@@ -1,10 +1,12 @@
-from attrs import define
-from decimal import Decimal
-from .base import Entity
+from src.entities.base import Entity
 from src.constants import EntityType
 
 
-@define
-class BankRate(Entity):
-    entity_type = EntityType.BANK_RATE.value
-    amount: Decimal
+class Bank(Entity):
+    def __init__(self, name: str):
+        pk = "b#"
+        sk = f"{pk}{name}"
+        entity_type = EntityType.BANK
+
+        self.name = name
+        super().__init__(pk, sk, entity_type)
