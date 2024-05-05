@@ -1,4 +1,5 @@
 import unittest
+from src.constants import EntityType
 from src.entities.migration import Migration
 from src.utils.serialization import DictSerialization
 
@@ -11,6 +12,7 @@ class TestMigration(unittest.TestCase):
         self.assertEqual(self.migration.pk, "m#")
         self.assertEqual(self.migration.sk, "m#adding table")
         self.assertEqual(self.migration.name, "adding table")
+        self.assertEqual(self.migration.entity_type, EntityType.MIGRATION)
 
     def test_from_serialized(self):
         serialized = DictSerialization.serialize(self.migration.to_dict())
