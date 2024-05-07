@@ -4,7 +4,7 @@ from src.enums import EntityType
 from src.utils.serialization import DictSerialization
 
 
-class TestBank(unittest.TestCase):
+class TestBankEntity(unittest.TestCase):
     def setUp(self) -> None:
         self.bank = Bank(name="bhd")
 

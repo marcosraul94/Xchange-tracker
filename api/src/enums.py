@@ -9,7 +9,7 @@ class Environment(Enum):
 
 class EntityType(Enum):
     BANK = "bank"
-    BANK_RATE = "bank rate"
+    RATE = "rate"
     MIGRATION = "migration"
 
 

@@ -4,7 +4,7 @@ from src.entities.migration import Migration
 from src.utils.serialization import DictSerialization
 
 
-class TestMigration(unittest.TestCase):
+class TestMigrationEntity(unittest.TestCase):
     def setUp(self) -> None:
         self.migration = Migration(name="adding table")
 
