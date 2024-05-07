@@ -4,7 +4,7 @@ from src.entities.bank import Bank
 from src.repositories.bank import BankRepo
 
 
-class TestMigration(E2ETestCase):
+class TestBankRepo(E2ETestCase):
     def setUp(self):
         super().setUp()
         self.repo = BankRepo()

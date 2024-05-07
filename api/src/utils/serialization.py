@@ -20,7 +20,9 @@ class EnumSerialization:
         return value.value
 
     @classmethod
-    def deserialize(cls, value: str, enumCls: EntityType | Currency) -> EntityType:
+    def deserialize(
+        cls, value: str, enumCls: EntityType | Currency
+    ) -> EntityType:
         return enumCls(value)
 
 

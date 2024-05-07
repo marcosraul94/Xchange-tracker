@@ -9,7 +9,7 @@ class TestBank(unittest.TestCase):
         self.bank = Bank(name="bhd")
 
     def test_creation(self):
-        self.assertEqual(self.bank.pk, "b#")
+        self.assertEqual(self.bank.pk, "b#bhd")
         self.assertEqual(self.bank.sk, "b#bhd")
         self.assertEqual(self.bank.name, "bhd")
         self.assertEqual(self.bank.entity_type, EntityType.BANK)

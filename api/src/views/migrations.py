@@ -1,10 +1,15 @@
 import os
 from importlib.util import spec_from_file_location, module_from_spec
-from .base import View
+from src.views.base import View
+from src.logger import logger
 from src.constants import migrations_path
+from src.repositories.migration import MigrationRepo
+from src.entities.migration import Migration
 
 
 class RunMigrations(View):
+    repo = MigrationRepo()
+
     @property
     def migrations(self):
         return [
@@ -15,7 +20,11 @@ class RunMigrations(View):
 
     @property
     def executed_migrations(self):
-        return []
+        tables_names = [table.name for table in self.repo.client.tables.all()]
+        if self.repo.table_name not in tables_names:
+            return []
+
+        return [migration.name for migration in self.repo.find_all()]
 
     @property
     def migrations_to_execute(self):
@@ -39,9 +48,10 @@ class RunMigrations(View):
     def migrate(self, migration: str):
         migration_module = self.import_migration_module(migration)
 
-        print(f"Running {migration} migration...")
+        logger.debug(f"Running {migration} migration...")
         migration_module.migrate()
-        print(f"{migration} ran successfully!")
+        self.repo.create(Migration(name=migration))
+        logger.debug(f"{migration} ran successfully!")
 
     def render(self):
         executed_migrations = []
@@ -52,10 +62,14 @@ class RunMigrations(View):
 
                 executed_migrations.append(migration)
 
-            return self.format_response({"Executed migrations": executed_migrations})
+            return self.format_response(
+                {
+                    "Executed migrations": executed_migrations,
+                }
+            )
 
         except Exception as e:
-            print(f"Error running migration {migration}: {e}")
+            logger.error(f"Error running migration {migration}: {e}")
 
             return self.format_response(
                 {"Executed migrations": executed_migrations, "error": str(e)},
@@ -63,8 +77,12 @@ class RunMigrations(View):
             )
 
 
-if __name__ == "__main__":
+def migrate():
     from flask import Flask
 
     with Flask(__name__).app_context():
         RunMigrations().render()
+
+
+if __name__ == "__main__":
+    migrate()

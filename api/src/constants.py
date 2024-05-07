@@ -1,12 +1,15 @@
 import os
+import logging
 from src.enums import Environment
 
 
 table_name = "exchange_tracker"
+entity_type_gsi = "entity_type_gsi"
 
 migrations_path = os.path.join(os.getcwd(), "migrations")
 
-environment = os.getenv("ENVIRONMENT", Environment.TEST.value)
+environment = os.getenv("ENVIRONMENT", Environment.DEV.value)
+log_level = os.getenv("LOG_LEVEL", logging.DEBUG)
 
 # DynamoDB config
 dynamo_endpoint = os.getenv("DYNAMO_ENDPOINT")
