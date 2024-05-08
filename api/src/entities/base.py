@@ -50,3 +50,9 @@ class Entity:
 
     def __eq__(self, value: "Entity") -> bool:
         return self.to_dict() == value.to_dict()
+
+    def __repr__(self) -> str:
+        cls_name = self.__class__.__name__
+        key_values = ", ".join(f"{k}={v}" for k, v in self.to_dict().items())
+
+        return f"{cls_name}({key_values})"
