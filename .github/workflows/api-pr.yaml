@@ -1,0 +1,44 @@
+name: Pull request API validation
+
+on:
+  push:
+    branches:
+      - "!main"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      DYNAMO_ENDPOINT: "http://db:8000"
+      AWS_REGION: "us-east-1"
+      AWS_ACCESS_KEY_ID: test
+      AWS_SECRET_ACCESS_KEY: test
+      PYTHONUNBUFFERED: TRUE
+
+    services:
+      db:
+        image: amazon/dynamodb-local:latest
+        options: --entrypoint "-jar DynamoDBLocal.jar -sharedDb -inMemory"
+        ports:
+          - 8000:8000
+
+    steps:
+      - name: Checkout commit
+        uses: actions/checkout@v4
+
+      - name: Setup python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        working-directory: api
+        run: make install
+
+      - name: Run linting
+        working-directory: api
+        run: make lint
+
+      - name: Run tests
+        working-directory: api
+        run: make test

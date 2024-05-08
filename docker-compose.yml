@@ -17,6 +17,9 @@ services:
     platform: linux/amd64
     build: ./api
     container_name: api
+    entrypoint: /bin/sh
+    stdin_open: true
+    tty: true
     volumes:
       - ./api:/var/task
     ports:
