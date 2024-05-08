@@ -34,4 +34,3 @@ class Repository:
             for entity in entities:
                 serialized = DictSerialization.serialize(entity.to_dict())
                 batch.put_item(Item={**serialized})
-
