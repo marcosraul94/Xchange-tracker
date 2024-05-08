@@ -14,6 +14,10 @@ class DatetimeSerialization:
         return datetime.fromisoformat(value)
 
 
+class DateSerialization(DatetimeSerialization):
+    pass
+
+
 class EnumSerialization:
     @classmethod
     def serialize(cls, value: Enum) -> str:

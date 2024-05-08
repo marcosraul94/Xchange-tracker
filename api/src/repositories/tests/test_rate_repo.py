@@ -1,5 +1,6 @@
 import unittest
 from decimal import Decimal
+from freezegun import freeze_time
 from datetime import timedelta, datetime, UTC
 from src.utils.e2e import E2ETestCase
 from src.enums import Currency
@@ -50,35 +51,26 @@ class TestBankRepo(E2ETestCase):
     def test_find_by_day(self):
         now_rate = self.rate
 
-        earlier_rate = Rate(
-            bank_name=self.bank.name,
-            amount=Decimal(5),
-            currency=Currency.DOLLAR,
-        )
-        earlier_rate.created_at -= timedelta(milliseconds=1)
+        with freeze_time(now_rate.created_at - timedelta(days=1)):
+            yesterday_rate = Rate(
+                bank_name=self.bank.name,
+                amount=Decimal(5),
+                currency=Currency.DOLLAR,
+            )
 
-        yesterday_rate = Rate(
-            bank_name=self.bank.name,
-            amount=Decimal(5),
-            currency=Currency.DOLLAR,
-        )
-        yesterday_rate.created_at -= timedelta(days=1)
+        with freeze_time(now_rate.created_at - timedelta(days=31)):
+            last_month_rate = Rate(
+                bank_name=self.bank.name,
+                amount=Decimal(5),
+                currency=Currency.DOLLAR,
+            )
 
-        last_month_rate = Rate(
-            bank_name=self.bank.name,
-            amount=Decimal(5),
-            currency=Currency.DOLLAR,
-        )
-        last_month_rate.created_at -= timedelta(days=32)
-
-        self.repo.create_all(
-            [now_rate, earlier_rate, yesterday_rate, last_month_rate]
-        )
+        self.repo.create_all([now_rate, yesterday_rate, last_month_rate])
 
         today = datetime.now(UTC).date()
         rates_from_today = self.repo.find_by_day(today)
 
-        self.assertListEqual(rates_from_today, [earlier_rate, now_rate])
+        self.assertListEqual(rates_from_today, [now_rate])
 
 
 if __name__ == "__main__":

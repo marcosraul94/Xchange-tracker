@@ -5,11 +5,11 @@ from src.entities.rate import Rate
 from src.enums import EntityType, Currency
 from src.utils.serialization import DictSerialization
 
-frozen_time = "2024-05-08T02:35:06.460863+00:00"
+frozen_day = "2024-05-08"
 
 
 class TestRateEntity(unittest.TestCase):
-    @freeze_time(frozen_time)
+    @freeze_time(frozen_day)
     def setUp(self) -> None:
         self.amount = Decimal(10)
         self.rate = Rate(
@@ -20,7 +20,7 @@ class TestRateEntity(unittest.TestCase):
 
     def test_creation(self):
         self.assertEqual(self.rate.pk, "b#bhd")
-        self.assertEqual(self.rate.sk, f"r#dollar#{frozen_time}")
+        self.assertEqual(self.rate.sk, f"r#dollar#{frozen_day}")
         self.assertEqual(self.rate.amount, self.amount)
         self.assertEqual(self.rate.entity_type, EntityType.RATE)
         self.assertEqual(self.rate.currency, Currency.DOLLAR)

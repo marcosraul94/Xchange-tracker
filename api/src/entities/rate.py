@@ -1,7 +1,7 @@
 from decimal import Decimal
 from src.entities.base import Entity
 from src.enums import EntityType, Currency
-from src.utils.serialization import DatetimeSerialization, EnumSerialization
+from src.utils.serialization import DateSerialization, EnumSerialization
 
 
 class Rate(Entity):
@@ -21,7 +21,7 @@ class Rate(Entity):
         self.currency = currency
         self.bank_name = bank_name
 
-        created_at = DatetimeSerialization.serialize(self.created_at)
+        created_at = DateSerialization.serialize(self.created_at.date())
         currency = EnumSerialization.serialize(currency)
         self.sk = f"r#{currency}#{created_at}"
 

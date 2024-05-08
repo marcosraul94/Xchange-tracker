@@ -4,7 +4,7 @@ from src.entities.bank import Bank
 from src.entities.rate import Rate
 from src.enums import EntityType, Currency
 from src.repositories.base import Repository
-from src.utils.serialization import EnumSerialization
+from src.utils.serialization import EnumSerialization, DateSerialization
 
 
 class RateRepo(Repository):
@@ -29,7 +29,9 @@ class RateRepo(Repository):
 
     def find_by_day(self, day: date) -> list[Rate]:
         filter_by_entity = Key("entity_type").eq(EntityType.RATE.value)
-        filter_by_day = Key("created_at").begins_with(day.isoformat())
+        filter_by_day = Key("created_at").begins_with(
+            DateSerialization.serialize(day)
+        )
 
         response = self.table.query(
             IndexName=self.entity_type_index_name,
