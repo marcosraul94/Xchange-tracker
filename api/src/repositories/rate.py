@@ -1,17 +1,28 @@
 from datetime import date
 from boto3.dynamodb.conditions import Key
-from src.enums import EntityType
 from src.entities.bank import Bank
 from src.entities.rate import Rate
+from src.enums import EntityType, Currency
 from src.repositories.base import Repository
+from src.utils.serialization import EnumSerialization
 
 
 class RateRepo(Repository):
     entity = Rate
 
-    def find_by_bank(self, bank: Bank) -> list[Rate]:
+    def find_by_bank_and_currency(
+        self,
+        bank: Bank,
+        currency: Currency,
+    ) -> list[Rate]:
+        filter_by_bank = Key("pk").eq(bank.pk)
+        filter_by_entity_and_currency = Key("sk").begins_with(
+            f"r#{EnumSerialization.serialize(currency)}#"
+        )
+
         response = self.table.query(
-            KeyConditionExpression=Key("pk").eq(bank.pk)
+            KeyConditionExpression=filter_by_bank
+            & filter_by_entity_and_currency,
         )
 
         return self.deserialize_items(response)

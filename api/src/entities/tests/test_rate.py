@@ -1,8 +1,6 @@
 import unittest
 from decimal import Decimal
-from datetime import datetime, UTC
 from freezegun import freeze_time
-from unittest.mock import patch
 from src.entities.rate import Rate
 from src.enums import EntityType, Currency
 from src.utils.serialization import DictSerialization

@@ -13,29 +13,36 @@ class TestBankRepo(E2ETestCase):
         super().setUp()
         self.repo = RateRepo()
         self.bank = Bank(name="bhd")
+        self.currency = Currency.EURO
         self.rate = Rate(
-            pk=self.bank.pk,
+            bank_name=self.bank.name,
             amount=Decimal(12),
-            currency=Currency.EURO,
+            currency=self.currency,
         )
 
     def test_creation(self):
         self.repo.create(self.rate)
-        rates = self.repo.find_by_bank(self.bank)
+        rates = self.repo.find_by_bank_and_currency(self.bank, self.currency)
 
         self.assertListEqual(rates, [self.rate])
 
-    def test_find_by_bank(self):
+    def test_find_by_bank_and_currency(self):
         other_bank = Bank(name="popular")
         rate_from_other_bank = Rate(
-            pk=other_bank.pk,
+            bank_name=other_bank.name,
             amount=Decimal(19),
-            currency=Currency.DOLLAR,
+            currency=self.currency,
         )
         self.repo.create(self.rate)
         self.repo.create(rate_from_other_bank)
-        rates_from_bank = self.repo.find_by_bank(self.bank)
-        rates_from_other_bank = self.repo.find_by_bank(other_bank)
+        rates_from_bank = self.repo.find_by_bank_and_currency(
+            self.bank,
+            self.currency,
+        )
+        rates_from_other_bank = self.repo.find_by_bank_and_currency(
+            other_bank,
+            self.currency,
+        )
 
         self.assertListEqual(rates_from_bank, [self.rate])
         self.assertListEqual(rates_from_other_bank, [rate_from_other_bank])
@@ -44,21 +51,21 @@ class TestBankRepo(E2ETestCase):
         now_rate = self.rate
 
         earlier_rate = Rate(
-            pk=self.bank.pk,
+            bank_name=self.bank.name,
             amount=Decimal(5),
             currency=Currency.DOLLAR,
         )
         earlier_rate.created_at -= timedelta(milliseconds=1)
 
         yesterday_rate = Rate(
-            pk=self.bank.pk,
+            bank_name=self.bank.name,
             amount=Decimal(5),
             currency=Currency.DOLLAR,
         )
         yesterday_rate.created_at -= timedelta(days=1)
 
         last_month_rate = Rate(
-            pk=self.bank.pk,
+            bank_name=self.bank.name,
             amount=Decimal(5),
             currency=Currency.DOLLAR,
         )
