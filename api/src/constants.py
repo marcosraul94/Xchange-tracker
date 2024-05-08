@@ -5,7 +5,6 @@ from src.enums import Environment
 
 table_name = "exchange_tracker"
 entity_type_gsi = "entity_type_gsi"
-
 migrations_path = os.path.join(os.getcwd(), "migrations")
 
 environment = os.getenv("ENVIRONMENT", Environment.DEV.value)
