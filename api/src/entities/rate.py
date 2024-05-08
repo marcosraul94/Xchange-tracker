@@ -1,31 +1,36 @@
-import uuid
 from decimal import Decimal
 from src.entities.base import Entity
 from src.enums import EntityType, Currency
+from src.utils.serialization import DatetimeSerialization, EnumSerialization
 
 
 class Rate(Entity):
     def __init__(
         self,
-        pk: str,
+        bank_name: str,
         amount: Decimal,
         currency: Currency,
     ):
+        super().__init__(
+            pk=f"b#{bank_name}",
+            sk=None,
+            entity_type=EntityType.RATE,
+        )
 
         self.amount = amount
         self.currency = currency
-        super().__init__(
-            pk,
-            sk=f"r#{uuid.uuid4()}",
-            entity_type=EntityType.RATE,
-        )
+        self.bank_name = bank_name
+
+        created_at = DatetimeSerialization.serialize(self.created_at)
+        currency = EnumSerialization.serialize(currency)
+        self.sk = f"r#{currency}#{created_at}"
 
     @classmethod
     def from_serialized(cls, serialized: dict):
         return super().from_serialized(
             serialized,
             constructor_keys=[
-                "pk",
+                "bank_name",
                 "amount",
                 "currency",
             ],

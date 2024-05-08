@@ -1,26 +1,28 @@
 import unittest
 from decimal import Decimal
+from datetime import datetime, UTC
+from freezegun import freeze_time
 from unittest.mock import patch
 from src.entities.rate import Rate
-from src.entities.bank import Bank
 from src.enums import EntityType, Currency
 from src.utils.serialization import DictSerialization
 
+frozen_time = "2024-05-08T02:35:06.460863+00:00"
+
 
 class TestRateEntity(unittest.TestCase):
-    @patch("src.entities.rate.uuid.uuid4", return_value="id")
-    def setUp(self, _) -> None:
-        self.bank = Bank(name="bhd")
+    @freeze_time(frozen_time)
+    def setUp(self) -> None:
         self.amount = Decimal(10)
         self.rate = Rate(
-            pk=self.bank.pk,
+            bank_name="bhd",
             amount=self.amount,
             currency=Currency.DOLLAR,
         )
 
     def test_creation(self):
-        self.assertEqual(self.rate.pk, self.bank.pk)
-        self.assertEqual(self.rate.sk, "r#id")
+        self.assertEqual(self.rate.pk, "b#bhd")
+        self.assertEqual(self.rate.sk, f"r#dollar#{frozen_time}")
         self.assertEqual(self.rate.amount, self.amount)
         self.assertEqual(self.rate.entity_type, EntityType.RATE)
         self.assertEqual(self.rate.currency, Currency.DOLLAR)
