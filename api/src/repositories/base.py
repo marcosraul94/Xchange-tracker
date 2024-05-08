@@ -27,9 +27,7 @@ class Repository:
         return [self.entity.from_serialized(item) for item in items]
 
     def create(self, entity: Entity):
-        serialized = DictSerialization.serialize(entity.to_dict())
-
-        self.table.put_item(Item={**serialized})
+        self.create_all([entity])
 
     def create_all(self, entities: list[Entity]):
         with self.table.batch_writer() as batch:
@@ -37,11 +35,3 @@ class Repository:
                 serialized = DictSerialization.serialize(entity.to_dict())
                 batch.put_item(Item={**serialized})
 
-    def update(self, entity):
-        raise NotImplementedError
-
-    def find_all(self):
-        raise NotImplementedError
-
-    def delete(self):
-        raise NotImplementedError

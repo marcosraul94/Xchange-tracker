@@ -1,5 +1,5 @@
 from datetime import date
-from boto3.dynamodb.conditions import Key
+from boto3.dynamodb.conditions import Key, Attr
 from src.entities.bank import Bank
 from src.entities.rate import Rate
 from src.enums import EntityType, Currency
@@ -27,8 +27,14 @@ class RateRepo(Repository):
 
         return self.deserialize_items(response)
 
-    def find_by_day(self, day: date) -> list[Rate]:
-        filter_by_entity = Key("entity_type").eq(EntityType.RATE.value)
+    def find_by_day_and_currency(
+        self,
+        day: date,
+        currency: Currency,
+    ) -> list[Rate]:
+        filter_by_entity = Key("entity_type").eq(
+            EnumSerialization.serialize(EntityType.RATE)
+        )
         filter_by_day = Key("created_at").begins_with(
             DateSerialization.serialize(day)
         )
@@ -36,6 +42,9 @@ class RateRepo(Repository):
         response = self.table.query(
             IndexName=self.entity_type_index_name,
             KeyConditionExpression=filter_by_entity & filter_by_day,
+            FilterExpression=Attr("currency").eq(
+                EnumSerialization.serialize(currency)
+            ),
         )
 
         return self.deserialize_items(response)
