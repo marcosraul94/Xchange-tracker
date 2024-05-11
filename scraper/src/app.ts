@@ -54,6 +54,7 @@ export class ScrapingSession {
   ) {
     console.log(`Opening ${browserName}...`);
     const browser = await puppeteer.launch({
+      ignoreHTTPSErrors: true,
       product: browserName,
       headless: true,
       timeout: 10000,

@@ -1,4 +1,4 @@
-name: Pull request API validation
+name: API pipeline
 
 on: push
 
