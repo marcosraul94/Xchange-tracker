@@ -32,6 +32,14 @@ jobs:
       - name: Start dynamodb
         run: docker run -d -p 8000:8000 --name db amazon/dynamodb-local:latest -jar DynamoDBLocal.jar -sharedDb -inMemory
 
+      - name: Wait for connection
+        working-directory: api
+        run: make wait-dynamo
+
+      - name: Run migrations
+        working-directory: api
+        run: make migrate
+
       - name: Run tests
         working-directory: api
-        run: sleep 5 && make test
+        run: make test
