@@ -18,20 +18,18 @@ class RunMigrations(View):
             if migration_name.endswith(".py")
         ]
 
-    @property
-    def executed_migrations(self):
+    def find_executed_migrations(self):
         tables_names = [table.name for table in self.repo.client.tables.all()]
         if self.repo.table_name not in tables_names:
             return []
 
         return [migration.name for migration in self.repo.find_all()]
 
-    @property
-    def migrations_to_execute(self):
+    def find_migrations_to_execute(self):
         return [
             migration_name
             for migration_name in self.migrations
-            if migration_name not in self.executed_migrations
+            if migration_name not in self.find_executed_migrations()
         ]
 
     @staticmethod
@@ -57,7 +55,13 @@ class RunMigrations(View):
         executed_migrations = []
 
         try:
-            for migration in self.migrations_to_execute:
+            executed_migrations = self.find_executed_migrations()
+            logger.debug(f"Executed migrations: {executed_migrations}")
+
+            migrations_to_execute = self.find_migrations_to_execute()
+            logger.debug(f"Migrations to execute: {migrations_to_execute}")
+
+            for migration in migrations_to_execute:
                 self.migrate(migration)
 
                 executed_migrations.append(migration)
