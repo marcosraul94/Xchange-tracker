@@ -6,7 +6,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     env:
-      DYNAMO_ENDPOINT: "http://db:8000"
+      DYNAMO_ENDPOINT: "http://localhost:8000"
       AWS_REGION: "us-east-1"
       AWS_ACCESS_KEY_ID: test
       AWS_SECRET_ACCESS_KEY: test
