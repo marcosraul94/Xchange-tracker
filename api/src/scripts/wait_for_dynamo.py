@@ -8,7 +8,7 @@ if __name__ == "__main__":
 
     while retry < max_retries:
         try:
-            get_client().tables.all()
+            list(get_client().tables.all())
             print("Connection successful with dynamo!")
             break
 
