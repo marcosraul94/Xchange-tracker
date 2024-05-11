@@ -34,7 +34,7 @@ jobs:
 
       - name: Wait for connection
         working-directory: api
-        run: docker ps && docker network ls && docker network inspect bridge && make wait-dynamo && sleep 20
+        run: make wait-dynamo
 
       - name: Run migrations
         working-directory: api
