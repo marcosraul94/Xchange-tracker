@@ -12,13 +12,6 @@ jobs:
       AWS_SECRET_ACCESS_KEY: test
       PYTHONUNBUFFERED: TRUE
 
-    services:
-      db:
-        image: amazon/dynamodb-local:latest
-        options: --entrypoint "-jar DynamoDBLocal.jar -sharedDb -inMemory"
-        ports:
-          - 8000:8000
-
     steps:
       - name: Checkout commit
         uses: actions/checkout@v4
@@ -36,6 +29,9 @@ jobs:
         working-directory: api
         run: make lint
 
+      - name: Start dynamodb
+        run: docker run -d -p 8000:8000 --name db amazon/dynamodb-local:latest -jar DynamoDBLocal.jar -sharedDb -inMemory
+
       - name: Run tests
         working-directory: api
-        run: make test
+        run: sleep 5 && make test
