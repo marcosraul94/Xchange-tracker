@@ -1,9 +1,9 @@
 from flask import Flask, request
 from src.enums import Currency
 from src.entities.bank import Bank
-from src.views.rate import RateView
-from src.views.bank import BankView
-from src.views.migration import MigrationView
+from src.views.rates import RatesView
+from src.views.banks import BanksView
+from src.views.migrations import MigrationsView
 from src.utils.serialization import DateSerialization
 
 
@@ -12,13 +12,13 @@ app = Flask(__name__)
 
 @app.route("/banks", methods=["GET"])
 def banks():
-    return BankView().get()
+    return BanksView().get()
 
 
 @app.route("/rates", methods=["GET", "POST"])
 def rates():
     if request.method == "POST":
-        return RateView().post()
+        return RatesView().post()
 
     day = (
         DateSerialization.deserialize(request.args.get("day"))
@@ -32,9 +32,9 @@ def rates():
         else None
     )
 
-    return RateView().get(day, currency, bank)
+    return RatesView().get(day, currency, bank)
 
 
 @app.route("/migrations", methods=["GET"])
 def migrate():
-    return MigrationView().get()
+    return MigrationsView().get()

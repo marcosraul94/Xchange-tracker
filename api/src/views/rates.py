@@ -5,7 +5,7 @@ from src.entities.bank import Bank
 from src.repositories.rate import RateRepo
 
 
-class RateView(View):
+class RatesView(View):
     repo = RateRepo()
 
     def get(self, day: date, currency: Currency, bank: Bank):

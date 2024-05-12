@@ -3,7 +3,7 @@ from src.repositories.bank import BankRepo
 from src.utils.serialization import DictSerialization
 
 
-class BankView(View):
+class BanksView(View):
     repo = BankRepo()
 
     def get(self):

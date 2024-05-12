@@ -7,7 +7,7 @@ from src.repositories.migration import MigrationRepo
 from src.entities.migration import Migration
 
 
-class MigrationView(View):
+class MigrationsView(View):
     repo = MigrationRepo()
 
     @property
@@ -85,7 +85,7 @@ def migrate():
     from flask import Flask
 
     with Flask(__name__).app_context():
-        MigrationView().get()
+        MigrationsView().get()
 
 
 if __name__ == "__main__":
