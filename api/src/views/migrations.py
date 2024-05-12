@@ -77,7 +77,7 @@ class MigrationsView(View):
 
             return self.format_response(
                 {"Executed migrations": executed_migrations, "error": str(e)},
-                status=500,
+                status_code=500,
             )
 
 

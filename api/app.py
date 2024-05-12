@@ -1,3 +1,4 @@
+from decimal import Decimal
 from flask import Flask, request
 from src.enums import Currency
 from src.entities.bank import Bank
@@ -18,7 +19,16 @@ def banks():
 @app.route("/rates", methods=["GET", "POST"])
 def rates():
     if request.method == "POST":
-        return RatesView().post()
+        rates = [
+            {
+                "bank_name": rate["bank_name"],
+                "amount": Decimal(rate["amount"]),
+                "currency": Currency(rate["currency"]),
+            }
+            for rate in request.json['rates']
+        ]
+
+        return RatesView().post(rates)
 
     day = (
         DateSerialization.deserialize(request.args.get("day"))

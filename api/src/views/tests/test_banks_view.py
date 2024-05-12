@@ -3,7 +3,7 @@ from app import app
 from src.entities.bank import Bank
 
 
-class TestBankView(unittest.TestCase):
+class TestBanksView(unittest.TestCase):
     def setUp(self):
         self.app = app.test_client()
 
