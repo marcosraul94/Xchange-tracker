@@ -133,6 +133,7 @@ class TestRatesViewGet(E2ETestCase):
         app.testing = True
         self.app = app.test_client()
         self.repo = RateRepo()
+        self.amount = Decimal("24")
         self.bank_1, self.bank_2, self.bank_3 = BankRepo().find_all()[:3]
 
     def send_get(self, query_string: dict):
@@ -146,17 +147,25 @@ class TestRatesViewGet(E2ETestCase):
         self,
         currency: Currency,
     ):
-        amount = Decimal("12")
-
         with freeze_time(creation_time - timedelta(days=1)):
-            self.repo.create(Rate(self.bank_1.name, amount, currency))
+            rate_from_yesterday_bank_1 = Rate(
+                self.bank_1.name, self.amount, currency
+            )
 
         with freeze_time(creation_time):
-            rate_from_today_bank_2 = Rate(self.bank_2.name, amount, currency)
-            rate_from_today_bank_3 = Rate(self.bank_3.name, amount, currency)
+            rate_from_today_bank_2 = Rate(
+                self.bank_2.name, self.amount, currency
+            )
+            rate_from_today_bank_3 = Rate(
+                self.bank_3.name, self.amount, currency
+            )
 
             self.repo.create_all(
-                [rate_from_today_bank_2, rate_from_today_bank_3]
+                [
+                    rate_from_yesterday_bank_1,
+                    rate_from_today_bank_2,
+                    rate_from_today_bank_3,
+                ]
             )
 
         query_params = {
@@ -180,14 +189,14 @@ class TestRatesViewGet(E2ETestCase):
         correct_currency,
         wrong_currency,
     ):
-        amount = Decimal("12")
-
-        wrong_currency_rate_1 = Rate(self.bank_1.name, amount, wrong_currency)
+        wrong_currency_rate_1 = Rate(
+            self.bank_1.name, self.amount, wrong_currency
+        )
         correct_currency_rate_2 = Rate(
-            self.bank_2.name, amount, correct_currency
+            self.bank_2.name, self.amount, correct_currency
         )
         correct_currency_rate_3 = Rate(
-            self.bank_3.name, amount, correct_currency
+            self.bank_3.name, self.amount, correct_currency
         )
 
         self.repo.create_all(
@@ -209,6 +218,64 @@ class TestRatesViewGet(E2ETestCase):
                 correct_currency_rate_2,
                 correct_currency_rate_3,
             },
+        )
+
+    @parameterized.expand([Currency.DOLLAR, Currency.EURO])
+    def find_by_bank_and_currency__filter_by_bank(self, currency):
+        correct_bank_rate_1 = Rate(self.bank_1.name, self.amount, currency)
+        incorrect_bank_rate = Rate(self.bank_2.name, self.amount, currency)
+        correct_bank_rate_2 = Rate(self.bank_3.name, self.amount, currency)
+
+        self.repo.create_all(
+            [correct_bank_rate_1, incorrect_bank_rate, correct_bank_rate_2]
+        )
+
+        query_params = {
+            "bank_name": self.bank_1.name,
+            "currency": EnumSerialization.serialize(currency),
+        }
+
+        self.assertSetEqual(
+            self.send_get(query_params),
+            {correct_bank_rate_1, correct_bank_rate_2},
+        )
+
+    @parameterized.expand(
+        [(Currency.DOLLAR, Currency.EURO), (Currency.EURO, Currency.DOLLAR)]
+    )
+    def find_by_bank_and_currency__filter_by_currency(
+        self, correct_currency, wrong_currency
+    ):
+        correct_bank_name = self.bank_1.name
+
+        with freeze_time(creation_time - timedelta(days=1)):
+            wrong_currency_rate = Rate(
+                correct_bank_name, self.amount, wrong_currency
+            )
+
+        correct_currency_rate_1 = Rate(
+            correct_bank_name, self.amount, correct_currency
+        )
+        correct_currency_rate_2 = Rate(
+            correct_bank_name, self.amount, correct_currency
+        )
+
+        self.repo.create_all(
+            [
+                wrong_currency_rate,
+                correct_currency_rate_1,
+                correct_currency_rate_2,
+            ]
+        )
+
+        query_params = {
+            "bank_name": correct_bank_name,
+            "currency": EnumSerialization.serialize(correct_currency),
+        }
+
+        self.assertSetEqual(
+            self.send_get(query_params),
+            {correct_currency_rate_1, correct_currency_rate_2},
         )
 
 
