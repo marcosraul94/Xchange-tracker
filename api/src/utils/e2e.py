@@ -1,6 +1,6 @@
 from unittest import TestCase
 from src.repositories.base import Repository
-from src.views.migrations import migrate
+from src.views.migration import migrate
 
 
 class E2ETestCase(TestCase):

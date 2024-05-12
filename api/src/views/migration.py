@@ -7,7 +7,7 @@ from src.repositories.migration import MigrationRepo
 from src.entities.migration import Migration
 
 
-class RunMigrations(View):
+class MigrationView(View):
     repo = MigrationRepo()
 
     @property
@@ -51,7 +51,7 @@ class RunMigrations(View):
         self.repo.create(Migration(name=migration))
         logger.debug(f"{migration} ran successfully!")
 
-    def render(self):
+    def get(self):
         executed_migrations = []
 
         try:
@@ -85,7 +85,7 @@ def migrate():
     from flask import Flask
 
     with Flask(__name__).app_context():
-        RunMigrations().render()
+        MigrationView().get()
 
 
 if __name__ == "__main__":

@@ -14,7 +14,7 @@ create-migration:
 	python -m src.scripts.create_migration --name $(name)
 
 migrate:
-	python -m src.views.migrations
+	python -m src.views.migration
 
 wait-dynamo:
 	python -m src.scripts.wait_for_dynamo

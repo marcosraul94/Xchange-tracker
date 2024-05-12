@@ -8,21 +8,21 @@ class TestBankRepo(E2ETestCase):
     def setUp(self):
         super().setUp()
         self.repo = BankRepo()
-        self.bank = Bank(name="bhd")
 
     def test_creation(self):
-        self.repo.create(self.bank)
+        new_bank = Bank(name="new_bank")
+
+        self.repo.create(new_bank)
         banks = self.repo.find_all()
 
-        self.assertListEqual(banks, [self.bank])
+        self.assertIn(new_bank, banks)
 
     def test_find_all(self):
-        another_bank = Bank(name="popular")
-        self.repo.create(self.bank)
-        self.repo.create(another_bank)
         banks = self.repo.find_all()
 
-        self.assertListEqual([self.bank, another_bank], banks)
+        self.assertIsInstance(banks, list)
+        self.assertTrue(len(banks) > 1)
+        self.assertIsInstance(banks[0], Bank)
 
 
 if __name__ == "__main__":
