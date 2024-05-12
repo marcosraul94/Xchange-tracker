@@ -137,12 +137,16 @@ class TestRatesViewGet(E2ETestCase):
 
     def send_get(self, query_string: dict):
         res = self.app.get("/rates", query_string=query_string)
+        rates = res.get_json()["data"]
 
-        return res.get_json()["data"]
+        return {Rate.from_serialized(rate) for rate in rates}
 
-    def test_find_rates_by_day_and_currency(self):
+    @parameterized.expand([Currency.DOLLAR, Currency.EURO])
+    def test_find_rates_by_day_and_currency__filter_by_day(
+        self,
+        currency: Currency,
+    ):
         amount = Decimal("12")
-        currency = Currency.DOLLAR
 
         with freeze_time(creation_time - timedelta(days=1)):
             self.repo.create(Rate(self.bank_1.name, amount, currency))
@@ -160,15 +164,50 @@ class TestRatesViewGet(E2ETestCase):
             "currency": EnumSerialization.serialize(currency),
         }
 
-        rates_from_today = {
-            Rate.from_serialized(rate) for rate in self.send_get(query_params)
-        }
-
         self.assertSetEqual(
-            rates_from_today,
+            self.send_get(query_params),
             {
                 rate_from_today_bank_2,
                 rate_from_today_bank_3,
+            },
+        )
+
+    @parameterized.expand(
+        [(Currency.DOLLAR, Currency.EURO), (Currency.EURO, Currency.DOLLAR)]
+    )
+    def test_find_rates_by_day_and_currency__filter_by_currency(
+        self,
+        correct_currency,
+        wrong_currency,
+    ):
+        amount = Decimal("12")
+
+        wrong_currency_rate_1 = Rate(self.bank_1.name, amount, wrong_currency)
+        correct_currency_rate_2 = Rate(
+            self.bank_2.name, amount, correct_currency
+        )
+        correct_currency_rate_3 = Rate(
+            self.bank_3.name, amount, correct_currency
+        )
+
+        self.repo.create_all(
+            [
+                wrong_currency_rate_1,
+                correct_currency_rate_2,
+                correct_currency_rate_3,
+            ]
+        )
+
+        query_params = {
+            "day": DateSerialization.serialize(creation_time.date()),
+            "currency": EnumSerialization.serialize(correct_currency),
+        }
+
+        self.assertSetEqual(
+            self.send_get(query_params),
+            {
+                correct_currency_rate_2,
+                correct_currency_rate_3,
             },
         )
 
