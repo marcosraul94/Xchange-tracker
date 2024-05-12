@@ -49,7 +49,13 @@ class Entity:
         return instance
 
     def __eq__(self, value: "Entity") -> bool:
+        if not isinstance(value, self.__class__):
+            return False
+
         return self.to_dict() == value.to_dict()
+
+    def __hash__(self):
+        return hash(f"{self.pk}-{self.sk}")
 
     def __repr__(self) -> str:
         cls_name = self.__class__.__name__

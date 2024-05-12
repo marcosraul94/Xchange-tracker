@@ -16,7 +16,7 @@ class RatesView(View):
         if not currency:
             raise ValueError(f"Missing currency: {currency}")
 
-        if not bank or not day:
+        if not bank and not day:
             raise ValueError(f"Missing bank or day: {[bank, day]}")
 
         rates = (
@@ -25,7 +25,9 @@ class RatesView(View):
             else self.repo.find_by_day_and_currency(day, currency)
         )
 
-        return self.format_response([rate.to_dict() for rate in rates])
+        return self.format_response(
+            [DictSerialization.serialize(rate.to_dict()) for rate in rates]
+        )
 
     def post(self, rates: list[dict]):
         existing_bank_names = [bank.name for bank in BankRepo().find_all()]

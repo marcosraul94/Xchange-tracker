@@ -1,6 +1,7 @@
 import json
 import unittest
 from decimal import Decimal
+from datetime import timedelta
 from freezegun import freeze_time
 from parameterized import parameterized
 from app import app
@@ -9,13 +10,20 @@ from src.entities.rate import Rate
 from src.utils.datetime import now
 from src.utils.e2e import E2ETestCase
 from src.repositories.bank import BankRepo
-from src.utils.serialization import DecimalSerialization, EnumSerialization
+from src.repositories.rate import RateRepo
+from src.utils.serialization import (
+    DecimalSerialization,
+    EnumSerialization,
+    DateSerialization,
+)
 
 creation_time = now()
 
 
-class TestRatesView(E2ETestCase):
+class TestRatesViewPost(E2ETestCase):
     def setUp(self):
+        super().setUp()
+
         app.testing = True
         self.app = app.test_client()
         self.bank = BankRepo().find_all()[0]
@@ -114,8 +122,55 @@ class TestRatesView(E2ETestCase):
             }
         ]
 
-        with self.assertRaises(TypeError):
+        with self.assertRaises(ValueError):
             self.send_post(rates_to_create)
+
+
+class TestRatesViewGet(E2ETestCase):
+    def setUp(self):
+        super().setUp()
+
+        app.testing = True
+        self.app = app.test_client()
+        self.repo = RateRepo()
+        self.bank_1, self.bank_2, self.bank_3 = BankRepo().find_all()[:3]
+
+    def send_get(self, query_string: dict):
+        res = self.app.get("/rates", query_string=query_string)
+
+        return res.get_json()["data"]
+
+    def test_find_rates_by_day_and_currency(self):
+        amount = Decimal("12")
+        currency = Currency.DOLLAR
+
+        with freeze_time(creation_time - timedelta(days=1)):
+            self.repo.create(Rate(self.bank_1.name, amount, currency))
+
+        with freeze_time(creation_time):
+            rate_from_today_bank_2 = Rate(self.bank_2.name, amount, currency)
+            rate_from_today_bank_3 = Rate(self.bank_3.name, amount, currency)
+
+            self.repo.create_all(
+                [rate_from_today_bank_2, rate_from_today_bank_3]
+            )
+
+        query_params = {
+            "day": DateSerialization.serialize(creation_time.date()),
+            "currency": EnumSerialization.serialize(currency),
+        }
+
+        rates_from_today = {
+            Rate.from_serialized(rate) for rate in self.send_get(query_params)
+        }
+
+        self.assertSetEqual(
+            rates_from_today,
+            {
+                rate_from_today_bank_2,
+                rate_from_today_bank_3,
+            },
+        )
 
 
 if __name__ == "__main__":

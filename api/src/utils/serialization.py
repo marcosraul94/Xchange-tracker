@@ -1,6 +1,6 @@
 from enum import Enum
 from decimal import Decimal
-from datetime import datetime
+from datetime import datetime, date
 from src.enums import EntityType, Currency
 
 
@@ -15,7 +15,13 @@ class DatetimeSerialization:
 
 
 class DateSerialization(DatetimeSerialization):
-    pass
+    @classmethod
+    def serialize(cls, value: date) -> str:
+        return super().serialize(value)
+
+    @classmethod
+    def deserialize(cls, value: str) -> date:
+        return super().deserialize(value).date()
 
 
 class EnumSerialization:
