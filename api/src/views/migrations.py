@@ -12,11 +12,13 @@ class MigrationsView(View):
 
     @property
     def migrations(self):
-        return [
-            migration_name
-            for migration_name in os.listdir(migrations_path)
-            if migration_name.endswith(".py")
-        ]
+        return sorted(
+            [
+                migration_name
+                for migration_name in os.listdir(migrations_path)
+                if migration_name.endswith(".py")
+            ]
+        )
 
     def find_executed_migrations(self):
         tables_names = [table.name for table in self.repo.client.tables.all()]

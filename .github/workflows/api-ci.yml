@@ -13,11 +13,11 @@ jobs:
       PYTHONUNBUFFERED: TRUE
 
     steps:
-      - name: Checkout commit
-        uses: actions/checkout@v4
-
       - name: Start dynamodb
         run: docker run -d -p 8000:8000 --name db amazon/dynamodb-local:latest -jar DynamoDBLocal.jar -sharedDb -inMemory
+
+      - name: Checkout commit
+        uses: actions/checkout@v4
 
       - name: Setup python
         uses: actions/setup-python@v5
