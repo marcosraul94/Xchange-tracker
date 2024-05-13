@@ -32,10 +32,6 @@ jobs:
         working-directory: api
         run: make lint
 
-      - name: Wait for connection
-        working-directory: api
-        run: make wait-dynamo
-
       - name: Run migrations
         working-directory: api
         run: make migrate
