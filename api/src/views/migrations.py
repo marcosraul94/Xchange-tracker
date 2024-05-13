@@ -83,6 +83,12 @@ class MigrationsView(View):
 
 def migrate():
     from flask import Flask
+    import logging
+
+    logger_names = logging.Logger.manager.loggerDict.keys()
+
+    for logger_name in logger_names:
+        logging.getLogger(logger_name).setLevel(logging.CRITICAL)
 
     with Flask(__name__).app_context():
         MigrationsView().get()

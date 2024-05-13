@@ -16,6 +16,9 @@ jobs:
       - name: Checkout commit
         uses: actions/checkout@v4
 
+      - name: Start dynamodb
+        run: docker run -d -p 8000:8000 --name db amazon/dynamodb-local:latest -jar DynamoDBLocal.jar -sharedDb -inMemory
+
       - name: Setup python
         uses: actions/setup-python@v5
         with:
@@ -28,9 +31,6 @@ jobs:
       - name: Run linting
         working-directory: api
         run: make lint
-
-      - name: Start dynamodb
-        run: docker run -d -p 8000:8000 --name db amazon/dynamodb-local:latest -jar DynamoDBLocal.jar -sharedDb -inMemory
 
       - name: Wait for connection
         working-directory: api
