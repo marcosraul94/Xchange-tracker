@@ -15,6 +15,3 @@ create-migration:
 
 migrate:
 	python -m src.views.migrations
-
-wait-dynamo:
-	python -m src.scripts.wait_for_dynamo
